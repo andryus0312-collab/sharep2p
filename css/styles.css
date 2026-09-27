@@ -4,16 +4,17 @@
 :root {
     --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --container-bg: #ffffff;
-    --text-primary: #333333;
-    --text-secondary: #666666;
-    --file-item-bg: #f0f0f0;
-    --file-item-text: #333333;
+    --text-primary: #1a1a1a;
+    --text-secondary: #555555;
+    --text-muted: #888888;
+    --file-item-bg: #f5f5f5;
+    --file-item-text: #1a1a1a;
     --upload-btn-bg: #667eea;
     --upload-btn-text: #ffffff;
     --share-btn-bg: #10b981;
     --share-btn-text: #ffffff;
-    --share-btn-disabled-bg: #cccccc;
-    --share-btn-disabled-text: #666666;
+    --share-btn-disabled-bg: #d1d5db;
+    --share-btn-disabled-text: #9ca3af;
     --qr-btn-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --qr-btn-text: #ffffff;
     --status-success-bg: #d1fae5;
@@ -22,60 +23,59 @@
     --status-error-text: #991b1b;
     --progress-bg: #e5e7eb;
     --progress-fill: #667eea;
-    --progress-text: #333333;
+    --progress-text: #1a1a1a;
     --qr-modal-bg: #ffffff;
     --qr-warning-bg: #fee2e2;
     --qr-warning-text: #991b1b;
     --qr-warning-border: #ef4444;
-    --link-box-bg: #f0f0f0;
+    --link-box-bg: #f5f5f5;
     --link-input-bg: #ffffff;
-    --link-input-border: #dddddd;
-    --link-input-text: #333333;
+    --link-input-border: #d1d5db;
+    --link-input-text: #1a1a1a;
     --debug-panel-bg: #1e1e1e;
     --debug-panel-text: #00ff00;
     --theme-toggle-bg: #ffffff;
-    --theme-toggle-icon: "🌙";
-    --shadow-color: rgba(0, 0, 0, 0.3);
+    --shadow-color: rgba(0, 0, 0, 0.2);
     --preview-border: #e5e7eb;
 }
 
 /* Modo oscuro */
 body.dark-mode {
-    --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    --container-bg: #2d2d44;
-    --text-primary: #ffffff;
-    --text-secondary: #b0b0b0;
-    --file-item-bg: #3d3d5c;
-    --file-item-text: #ffffff;
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    --container-bg: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --file-item-bg: #334155;
+    --file-item-text: #f1f5f9;
     --upload-btn-bg: #5568d3;
     --upload-btn-text: #ffffff;
     --share-btn-bg: #059669;
     --share-btn-text: #ffffff;
-    --share-btn-disabled-bg: #555555;
-    --share-btn-disabled-text: #999999;
+    --share-btn-disabled-bg: #475569;
+    --share-btn-disabled-text: #94a3b8;
     --qr-btn-bg: linear-gradient(135deg, #5568d3 0%, #6b4fa0 100%);
     --qr-btn-text: #ffffff;
     --status-success-bg: #064e3b;
     --status-success-text: #6ee7b7;
     --status-error-bg: #7f1d1d;
     --status-error-text: #fca5a5;
-    --progress-bg: #3d3d5c;
+    --progress-bg: #334155;
     --progress-fill: #818cf8;
-    --progress-text: #ffffff;
-    --qr-modal-bg: #2d2d44;
+    --progress-text: #f1f5f9;
+    --qr-modal-bg: #1e293b;
     --qr-warning-bg: #7f1d1d;
     --qr-warning-text: #fca5a5;
     --qr-warning-border: #ef4444;
-    --link-box-bg: #3d3d5c;
-    --link-input-bg: #2d2d44;
-    --link-input-border: #555555;
-    --link-input-text: #ffffff;
-    --debug-panel-bg: #0f0f0f;
+    --link-box-bg: #334155;
+    --link-input-bg: #1e293b;
+    --link-input-border: #475569;
+    --link-input-text: #f1f5f9;
+    --debug-panel-bg: #0f172a;
     --debug-panel-text: #00ff00;
-    --theme-toggle-bg: #2d2d44;
-    --theme-toggle-icon: "☀️";
+    --theme-toggle-bg: #334155;
     --shadow-color: rgba(0, 0, 0, 0.5);
-    --preview-border: #555555;
+    --preview-border: #475569;
 }
 
 /* ============================================
@@ -88,7 +88,7 @@ body.dark-mode {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background: var(--bg-gradient);
     min-height: 100vh;
     display: flex;
@@ -100,11 +100,11 @@ body {
 
 .container {
     background: var(--container-bg);
-    border-radius: 20px;
-    padding: 30px;
-    max-width: 500px;
+    border-radius: 24px;
+    padding: 40px 35px;
+    max-width: 550px;
     width: 100%;
-    box-shadow: 0 20px 60px var(--shadow-color);
+    box-shadow: 0 25px 70px var(--shadow-color);
     text-align: center;
     transition: background 0.5s ease, box-shadow 0.5s ease;
     animation: fadeInUp 0.6s ease-out;
@@ -121,22 +121,74 @@ body {
     }
 }
 
-h1 {
-    margin-bottom: 10px;
+/* ============================================
+   🆕 HEADER DE LA APP (Logo + Nombre)
+   ============================================ */
+.app-header {
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.app-logo {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 16px rgba(102, 126, 234, 0.4));
+    animation: logoFloat 3s ease-in-out infinite;
+    transition: transform 0.3s ease;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px;
+}
+
+.app-logo:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+@keyframes logoFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.app-title {
+    font-size: 32px;
+    font-weight: 800;
     color: var(--text-primary);
-    font-size: 24px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     transition: color 0.5s ease;
 }
 
-.subtitle {
+body.dark-mode .app-title {
+    background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.app-subtitle {
+    font-size: 15px;
     color: var(--text-secondary);
-    margin-bottom: 25px;
-    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
     transition: color 0.5s ease;
 }
 
+/* ============================================
+   SECCIÓN DE CARGA
+   ============================================ */
 .upload-section {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 #fileInput {
@@ -147,52 +199,63 @@ h1 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 15px 30px;
+    gap: 10px;
+    padding: 18px 35px;
     background: var(--upload-btn-bg);
     color: var(--upload-btn-text);
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 17px;
+    font-weight: 600;
     transition: all 0.3s ease;
     width: 100%;
     text-align: center;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .upload-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.97);
 }
 
 .upload-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-/*  Vista previa de imágenes */
+.btn-icon {
+    font-size: 20px;
+}
+
+.btn-text {
+    font-size: 17px;
+}
+
+/* ============================================
+   🖼️ VISTA PREVIA DE IMÁGENES
+   ============================================ */
 .preview-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
     justify-content: center;
-    margin: 15px 0;
+    margin: 20px 0;
     min-height: 0;
 }
 
 .preview-item {
     position: relative;
-    width: 80px;
-    height: 80px;
-    border-radius: 10px;
+    width: 90px;
+    height: 90px;
+    border-radius: 12px;
     overflow: hidden;
     border: 2px solid var(--preview-border);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     animation: zoomIn 0.4s ease-out;
     transition: transform 0.3s ease, border-color 0.5s ease;
 }
 
 .preview-item:hover {
-    transform: scale(1.1);
+    transform: scale(1.15);
 }
 
 @keyframes zoomIn {
@@ -218,26 +281,26 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+    font-size: 36px;
     background: var(--file-item-bg);
     transition: background 0.5s ease;
 }
 
 .file-list {
-    margin: 15px 0;
+    margin: 20px 0;
     min-height: 20px;
     text-align: left;
 }
 
 .file-item {
     background: var(--file-item-bg);
-    padding: 10px 15px;
-    margin: 8px 0;
-    border-radius: 8px;
+    padding: 12px 18px;
+    margin: 10px 0;
+    border-radius: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--file-item-text);
     transition: all 0.3s ease, background 0.5s ease, color 0.5s ease;
     animation: slideIn 0.4s ease-out;
@@ -254,13 +317,15 @@ h1 {
     }
 }
 
-/* 🆕 Barra de progreso */
+/* ============================================
+   📊 BARRA DE PROGRESO
+   ============================================ */
 .progress-bar {
     width: 100%;
-    height: 50px;
+    height: 55px;
     background: var(--progress-bg);
-    border-radius: 10px;
-    margin: 15px 0;
+    border-radius: 12px;
+    margin: 20px 0;
     position: relative;
     overflow: hidden;
     display: none;
@@ -281,7 +346,7 @@ h1 {
     height: 100%;
     width: 0%;
     background: var(--progress-fill);
-    border-radius: 10px;
+    border-radius: 12px;
     transition: width 0.5s ease, background 0.5s ease;
     position: relative;
     overflow: hidden;
@@ -306,81 +371,86 @@ h1 {
     left: 50%;
     transform: translate(-50%, -50%);
     color: var(--progress-text);
-    font-size: 13px;
-    font-weight: bold;
+    font-size: 14px;
+    font-weight: 600;
     white-space: nowrap;
     transition: color 0.5s ease;
 }
 
-/* Botón de compartir */
+/* ============================================
+   BOTONES PRINCIPALES
+   ============================================ */
 .share-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     width: 100%;
-    padding: 15px;
+    padding: 18px;
     background: var(--share-btn-disabled-bg);
     color: var(--share-btn-disabled-text);
     border: none;
-    border-radius: 10px;
-    font-size: 18px;
-    font-weight: bold;
+    border-radius: 12px;
+    font-size: 19px;
+    font-weight: 700;
     cursor: not-allowed;
     transition: all 0.3s ease, background 0.5s ease, color 0.5s ease;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .share-btn.active {
     background: var(--share-btn-bg);
     color: var(--share-btn-text);
     cursor: pointer;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
 
 .share-btn.active:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
 }
 
 .share-btn.active:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
 }
 
-/* Botón QR */
 .qr-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     width: 100%;
-    padding: 15px;
+    padding: 18px;
     background: var(--qr-btn-bg);
     color: var(--qr-btn-text);
     border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: bold;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .qr-btn:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
 }
 
 .qr-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 .status {
     margin-top: 20px;
-    padding: 12px;
-    border-radius: 10px;
+    padding: 14px;
+    border-radius: 12px;
     text-align: center;
     display: none;
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 500;
     transition: all 0.3s ease;
 }
 
@@ -411,14 +481,14 @@ h1 {
     position: fixed;
     top: 20px;
     right: 20px;
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     background: var(--theme-toggle-bg);
     border: none;
-    font-size: 22px;
+    font-size: 24px;
     cursor: pointer;
-    box-shadow: 0 4px 12px var(--shadow-color);
+    box-shadow: 0 4px 15px var(--shadow-color);
     z-index: 9999;
     transition: all 0.3s ease, background 0.5s ease;
     display: flex;
@@ -435,7 +505,7 @@ h1 {
 }
 
 /* ============================================
-   🆕 MODAL DEL CÓDIGO QR
+    MODAL DEL CÓDIGO QR (MÁS GRANDE)
    ============================================ */
 .qr-modal {
     display: none;
@@ -444,12 +514,12 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.75);
     z-index: 10000;
     justify-content: center;
     align-items: center;
     padding: 20px;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(8px);
 }
 
 .qr-modal.active {
@@ -459,18 +529,19 @@ h1 {
 
 .qr-modal-content {
     background: var(--qr-modal-bg);
-    border-radius: 20px;
-    max-width: 400px;
+    border-radius: 24px;
+    max-width: 480px;
     width: 100%;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.6);
     animation: slideUp 0.4s ease-out;
     transition: background 0.5s ease;
 }
 
 @keyframes slideUp {
     from {
-        transform: translateY(50px);
+        transform: translateY(60px);
         opacity: 0;
     }
     to {
@@ -482,51 +553,55 @@ h1 {
 .qr-modal-header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 20px;
+    padding: 25px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-radius: 24px 24px 0 0;
 }
 
 .qr-modal-header h2 {
-    font-size: 18px;
+    font-size: 22px;
+    font-weight: 700;
     margin: 0;
 }
 
 .close-qr-btn {
-    background: none;
+    background: rgba(255, 255, 255, 0.2);
     border: none;
     color: white;
-    font-size: 24px;
+    font-size: 26px;
     cursor: pointer;
     padding: 0;
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.2s ease;
+    border-radius: 50%;
+    transition: all 0.3s ease;
 }
 
 .close-qr-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
     transform: rotate(90deg);
 }
 
 .qr-modal-body {
-    padding: 25px;
+    padding: 30px;
     text-align: center;
 }
 
-/* 🔴 NUEVO: Tip de advertencia en rojo */
+/* ⚠️ Tip de advertencia en rojo */
 .qr-warning {
     background: var(--qr-warning-bg);
-    border-left: 4px solid var(--qr-warning-border);
-    padding: 12px 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+    border-left: 5px solid var(--qr-warning-border);
+    padding: 16px 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
     display: flex;
     align-items: flex-start;
-    gap: 10px;
+    gap: 12px;
     text-align: left;
     animation: pulse 2s ease-in-out infinite;
     transition: background 0.5s ease;
@@ -537,95 +612,110 @@ h1 {
         box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
     }
     50% {
-        box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
     }
 }
 
 .warning-icon {
-    font-size: 20px;
+    font-size: 24px;
     flex-shrink: 0;
 }
 
 .warning-text {
     color: var(--qr-warning-text);
-    font-size: 13px;
+    font-size: 15px;
     margin: 0;
-    line-height: 1.4;
+    line-height: 1.5;
+    font-weight: 500;
     transition: color 0.5s ease;
 }
 
 .warning-text strong {
     color: var(--qr-warning-border);
+    font-weight: 700;
 }
 
 .qr-message {
     color: var(--text-primary);
-    font-size: 14px;
-    margin-bottom: 20px;
-    line-height: 1.5;
+    font-size: 16px;
+    margin-bottom: 25px;
+    line-height: 1.6;
+    font-weight: 500;
     transition: color 0.5s ease;
 }
 
 .qrcode-container {
     display: flex;
     justify-content: center;
-    margin: 20px 0;
-    padding: 15px;
+    margin: 25px 0;
+    padding: 20px;
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.qrcode-container img {
+    width: 240px !important;
+    height: 240px !important;
 }
 
 .qr-instruction {
     color: var(--text-secondary);
-    font-size: 13px;
-    margin-bottom: 20px;
+    font-size: 15px;
+    margin-bottom: 25px;
+    font-weight: 500;
     transition: color 0.5s ease;
 }
 
 .qr-link-box {
     background: var(--link-box-bg);
-    padding: 12px;
-    border-radius: 10px;
+    padding: 18px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     transition: background 0.5s ease;
 }
 
 .qr-link-label {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text-secondary);
     margin: 0;
+    font-weight: 500;
     transition: color 0.5s ease;
 }
 
 .qr-link-input {
     width: 100%;
-    padding: 8px;
-    border: 1px solid var(--link-input-border);
-    border-radius: 6px;
-    font-size: 12px;
+    padding: 12px;
+    border: 2px solid var(--link-input-border);
+    border-radius: 8px;
+    font-size: 14px;
     background: var(--link-input-bg);
     color: var(--link-input-text);
     transition: all 0.5s ease;
+    font-family: 'Courier New', monospace;
 }
 
 .copy-link-btn {
-    padding: 8px;
+    padding: 12px;
     background: #667eea;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 15px;
+    font-weight: 600;
     transition: all 0.3s ease;
 }
 
 .copy-link-btn:active {
     background: #5568d3;
-    transform: scale(0.95);
+    transform: scale(0.97);
+}
+
+.copy-link-btn:hover {
+    background: #5568d3;
 }
 
 /* ============================================
@@ -635,15 +725,15 @@ h1 {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 56px;
-    height: 56px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background: #667eea;
     color: white;
     border: none;
-    font-size: 24px;
+    font-size: 26px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     z-index: 9999;
     transition: transform 0.3s ease;
 }
@@ -658,21 +748,21 @@ h1 {
 
 .debug-panel {
     position: fixed;
-    bottom: 90px;
+    bottom: 95px;
     right: 20px;
     left: 20px;
-    max-width: 400px;
-    max-height: 60vh;
+    max-width: 420px;
+    max-height: 65vh;
     background: var(--debug-panel-bg);
     color: var(--debug-panel-text);
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     z-index: 9998;
     display: none;
     flex-direction: column;
     overflow: hidden;
     font-family: 'Courier New', monospace;
-    font-size: 12px;
+    font-size: 13px;
     transition: background 0.5s ease;
 }
 
@@ -684,19 +774,20 @@ h1 {
 .debug-header {
     background: #333;
     color: white;
-    padding: 12px 16px;
+    padding: 14px 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
     font-family: sans-serif;
+    font-size: 14px;
 }
 
 .close-btn {
     background: none;
     border: none;
     color: white;
-    font-size: 20px;
+    font-size: 22px;
     cursor: pointer;
     transition: transform 0.2s ease;
 }
@@ -706,7 +797,7 @@ h1 {
 }
 
 .debug-content {
-    padding: 12px;
+    padding: 14px;
     overflow-y: auto;
     flex: 1;
 }
@@ -719,21 +810,22 @@ h1 {
 
 .debug-actions {
     display: flex;
-    gap: 8px;
-    padding: 12px;
+    gap: 10px;
+    padding: 14px;
     background: #333;
     border-top: 1px solid #444;
 }
 
 .debug-action-btn {
     flex: 1;
-    padding: 8px;
+    padding: 10px;
     background: #667eea;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 13px;
+    font-weight: 600;
     transition: all 0.3s ease;
 }
 
@@ -743,12 +835,13 @@ h1 {
 }
 
 .log-line {
-    margin: 4px 0;
-    padding: 4px 8px;
+    margin: 5px 0;
+    padding: 5px 10px;
     border-left: 3px solid #667eea;
     background: rgba(102, 126, 234, 0.1);
     color: #ddd;
     animation: slideIn 0.3s ease-out;
+    font-size: 12px;
 }
 
 .log-line.error {
@@ -759,4 +852,4 @@ h1 {
 .log-line.success {
     border-left-color: #00ff00;
     color: #00ff00;
-}
+       }
