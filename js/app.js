@@ -209,3 +209,152 @@ clearDebug.addEventListener('click', () => {
 window.addEventListener('load', () => {
     setTimeout(runDiagnostics, 1000);
 });
+
+// ============================================
+// 🔍 CONSOLA FLOTANTE DE DEPURACIÓN
+// ============================================
+
+const debugBtn = document.getElementById('debugBtn');
+const debugPanel = document.getElementById('debugPanel');
+const closeDebug = document.getElementById('closeDebug');
+const debugOutput = document.getElementById('debugOutput');
+const copyDebug = document.getElementById('copyDebug');
+const clearDebug = document.getElementById('clearDebug');
+
+// 📋 Array para guardar todos los logs
+let debugLogs = [];
+
+// 📝 Función para agregar un log
+function addLog(message, type = 'info') {
+    const timestamp = new Date().toLocaleTimeString();
+    const logEntry = { time: timestamp, message, type };
+    debugLogs.push(logEntry);
+    updateDebugPanel();
+}
+
+// 🔄 Actualizar el panel de depuración
+function updateDebugPanel() {
+    const logsHTML = debugLogs.map(log => {
+        const icon = log.type === 'error' ? '❌' : 
+                     log.type === 'success' ? '✅' : 
+                     log.type === 'warning' ? '️' : 'ℹ️';
+        return `<div class="log-line ${log.type}">${icon} [${log.time}] ${log.message}</div>`;
+    }).join('');
+    
+    debugOutput.innerHTML = logsHTML || 'Sin logs aún...';
+}
+
+// 🚀 Ejecutar todas las verificaciones
+function runDiagnostics() {
+    addLog('🔍 Iniciando diagnóstico...', 'info');
+    
+    // 1️ Verificar Web Share API
+    if (navigator.share) {
+        addLog('✅ Web Share API: DISPONIBLE', 'success');
+    } else {
+        addLog('❌ Web Share API: NO DISPONIBLE en este navegador', 'error');
+    }
+    
+    // 2️⃣ Verificar si puede compartir archivos
+    if (navigator.canShare) {
+        const testFile = new File(['test'], 'test.txt', { type: 'text/plain' });
+        if (navigator.canShare({ files: [testFile] })) {
+            addLog('✅ Compartir archivos: SOPORTADO', 'success');
+        } else {
+            addLog('⚠️ Compartir archivos: NO SOPORTADO', 'warning');
+        }
+    } else {
+        addLog('❌ navigator.canShare: NO DISPONIBLE', 'error');
+    }
+    
+    // 3️⃣ Verificar Service Worker
+    if ('serviceWorker' in navigator) {
+        addLog('✅ Service Worker: SOPORTADO', 'success');
+        
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            if (registrations.length > 0) {
+                addLog(`✅ Service Worker registrado: ${registrations.length} activo(s)`, 'success');
+            } else {
+                addLog('⚠️ Service Worker: No hay ninguno registrado', 'warning');
+            }
+        });
+    } else {
+        addLog('❌ Service Worker: NO SOPORTADO', 'error');
+    }
+    
+    // 4️⃣ Verificar manifest.json
+    fetch('./manifest.json')
+        .then(response => {
+            if (response.ok) {
+                addLog('✅ manifest.json: CARGADO CORRECTAMENTE', 'success');
+                return response.json();
+            } else {
+                throw new Error('No se pudo cargar');
+            }
+        })
+        .then(manifest => {
+            addLog(`📱 Nombre: ${manifest.name}`, 'info');
+            addLog(` Theme color: ${manifest.theme_color}`, 'info');
+            addLog(`🖼️ Íconos: ${manifest.icons.length} disponible(s)`, 'info');
+            
+            // Verificar cada ícono
+            manifest.icons.forEach(icon => {
+                const img = new Image();
+                img.onload = () => {
+                    addLog(`✅ Ícono ${icon.sizes}: CARGADO`, 'success');
+                };
+                img.onerror = () => {
+                    addLog(`❌ Ícono ${icon.sizes}: NO SE ENCUENTRA`, 'error');
+                };
+                img.src = icon.src;
+            });
+        })
+        .catch(error => {
+            addLog(`❌ manifest.json: ERROR - ${error.message}`, 'error');
+        });
+    
+    // 5️⃣ Información del dispositivo
+    addLog(`📱 User Agent: ${navigator.userAgent.substring(0, 50)}...`, 'info');
+    addLog(`🌐 Protocolo: ${window.location.protocol}`, 'info');
+    addLog(`🔗 URL: ${window.location.href}`, 'info');
+    addLog(`📐 Pantalla: ${window.screen.width}x${window.screen.height}`, 'info');
+    
+    // 6️⃣ Verificar HTTPS
+    if (window.location.protocol === 'https:') {
+        addLog('✅ HTTPS: ACTIVO (requerido para Web Share API)', 'success');
+    } else {
+        addLog('❌ HTTPS: NO ACTIVO (Web Share API no funcionará)', 'error');
+    }
+}
+
+// 🎛️ Event Listeners del botón flotante
+debugBtn.addEventListener('click', () => {
+    debugPanel.classList.toggle('active');
+    if (debugPanel.classList.contains('active')) {
+        runDiagnostics();
+    }
+});
+
+closeDebug.addEventListener('click', () => {
+    debugPanel.classList.remove('active');
+});
+
+copyDebug.addEventListener('click', () => {
+    const text = debugLogs.map(log => `[${log.time}] ${log.message}`).join('\n');
+    navigator.clipboard.writeText(text).then(() => {
+        addLog('📋 Logs copiados al portapapeles', 'success');
+    }).catch(() => {
+        addLog('❌ No se pudieron copiar los logs', 'error');
+    });
+});
+
+clearDebug.addEventListener('click', () => {
+    debugLogs = [];
+    updateDebugPanel();
+    addLog('🗑️ Logs limpiados', 'info');
+});
+
+// 🚀 Ejecutar diagnóstico al cargar la página
+window.addEventListener('load', () => {
+    setTimeout(runDiagnostics, 1000);
+});
