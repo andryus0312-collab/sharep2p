@@ -151,10 +151,10 @@ Este proyecto está bajo la licencia **MIT** - ver el archivo [LICENSE](LICENSE)
 
 ## 👨‍💻 Autor
 
-**Tu Nombre** 🌟
+**Sr. Andryus** 🌟
 
 - 💼 GitHub: [@tu-usuario](https://github.com/tu-usuario)
-- 📧 Email: tu-email@ejemplo.com
+- 📧 Email: zacariasmelo1981@gmail.com
 
 ---
 
