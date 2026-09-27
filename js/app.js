@@ -9,8 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusDiv = document.getElementById('status');
     const debugBtn = document.getElementById('debugBtn');
     const debugPanel = document.getElementById('debugPanel');
+    const previewContainer = document.getElementById('previewContainer');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const themeToggle = document.getElementById('themeToggle');
     
-    // 🆕 NUEVOS: Elementos del QR
+    // Elementos del QR
     const qrBtn = document.getElementById('qrBtn');
     const qrModal = document.getElementById('qrModal');
     const closeQrModal = document.getElementById('closeQrModal');
@@ -20,99 +25,211 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let selectedFiles = [];
 
-    // 2️⃣ LÓGICA: Cuando el usuario selecciona archivos
+    // ============================================
+    // 🌙 MODO OSCURO
+    // ============================================
+    
+    // Cargar preferencia guardada
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeToggle.textContent = '☀️';
+    }
+    
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        themeToggle.textContent = isDark ? '☀️' : '🌙';
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        console.log('🎨 Tema cambiado a:', isDark ? 'oscuro' : 'claro');
+    });
+
+    // ============================================
+    // 📂 SELECCIÓN DE ARCHIVOS
+    // ============================================
+    
     fileInput.addEventListener('change', (e) => {
         console.log('📂 Archivos detectados:', e.target.files.length);
         selectedFiles = Array.from(e.target.files);
         
         if (selectedFiles.length > 0) {
+            // Mostrar lista de archivos
             fileList.innerHTML = selectedFiles.map(file => `
                 <div class="file-item">
-                    <span>📄 ${file.name}</span>
-                    <span>${(file.size / 1024).toFixed(1)} KB</span>
+                    <span> ${file.name}</span>
+                    <span>${formatFileSize(file.size)}</span>
                 </div>
             `).join('');
             
+            //  Generar vista previa
+            generatePreviews(selectedFiles);
+            
+            // Activar botón de compartir
             shareBtn.disabled = false;
             shareBtn.classList.add('active');
-            shareBtn.textContent = `🚀 Compartir (${selectedFiles.length})`;
+            shareBtn.querySelector('.btn-text').textContent = `Compartir (${selectedFiles.length})`;
         } else {
             fileList.innerHTML = '';
+            previewContainer.innerHTML = '';
             shareBtn.disabled = true;
             shareBtn.classList.remove('active');
-            shareBtn.textContent = '🚀 Compartir';
+            shareBtn.querySelector('.btn-text').textContent = 'Compartir';
         }
     });
 
-    // 3️⃣ LÓGICA: Cuando el usuario toca "Compartir"
+    // 🆕 Generar vista previa de archivos
+    function generatePreviews(files) {
+        previewContainer.innerHTML = '';
+        
+        files.forEach((file, index) => {
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item';
+            previewItem.style.animationDelay = `${index * 0.1}s`;
+            
+            if (file.type.startsWith('image/')) {
+                // Es una imagen: mostrar thumbnail
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = file.name;
+                    previewItem.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // No es imagen: mostrar ícono según tipo
+                const icon = document.createElement('div');
+                icon.className = 'file-icon';
+                
+                if (file.type.startsWith('video/')) {
+                    icon.textContent = '🎬';
+                } else if (file.type.includes('pdf')) {
+                    icon.textContent = '📕';
+                } else if (file.type.includes('word') || file.type.includes('document')) {
+                    icon.textContent = '📝';
+                } else {
+                    icon.textContent = '📄';
+                }
+                
+                previewItem.appendChild(icon);
+            }
+            
+            previewContainer.appendChild(previewItem);
+        });
+    }
+
+    //  Formatear tamaño de archivo
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    // ============================================
+    // 🚀 COMPARTIR ARCHIVOS
+    // ============================================
+    
     shareBtn.addEventListener('click', async () => {
         if (selectedFiles.length === 0) return;
         
         try {
-            statusDiv.textContent = '📤 Preparando archivos...';
-            statusDiv.className = 'status success';
+            // 🆕 Mostrar barra de progreso - Fase 1
+            showProgress(20, '⏳ Preparando archivos...');
             
+            // Crear mensaje de firma
             const signatureMessage = selectedFiles.map(file => {
-                return `🎉✨ *ARCHIVO COMPARTIDO* 📤✨🎉
+                return `🎉✨ *ARCHIVO COMPARTIDO* 📤✨
 
 📄 *Nombre:* ${file.name}
-📦 *Tamaño:* ${(file.size / 1024).toFixed(1)} KB
+📦 *Tamaño:* ${formatFileSize(file.size)}
 
 ━━━━━━━━━━━━━━━━━━━━━━━
 📱 *Compartido a través de:*
- *ShareP2P* - Tu app de compartir archivos
+🚀 *ShareP2P* - Tu app de compartir archivos
 
 🔗 *Visita la app:*
-👉 https://andryus0312-collab.github.io/sharep2p/
+ https://andryus0312-collab.github.io/sharep2p/
 ━━━━━━━━━━━━━━━━━━━━━━━
 
 💙 *Hecho con  por Sr. Andryus* 💙
-🌟 ¡Gracias por usar ShareP2P! 🌟`;
+ ¡Gracias por usar ShareP2P! 🌟`;
             }).join('\n\n━━━━━━━━━━━━━━━━━━━━━━━\n\n');
             
-            statusDiv.textContent = '📤 Abriendo menú de compartir...';
+            // 🆕 Fase 2
+            showProgress(50, '📤 Abriendo menú de compartir...');
             
+            // Llamar a la API nativa
             await navigator.share({
                 files: selectedFiles,
                 title: '📤 Archivos compartidos con ShareP2P',
                 text: signatureMessage
             });
             
-            statusDiv.textContent = '✅ ¡Compartido con éxito!';
+            //  Fase 3 - Éxito
+            showProgress(100, '✅ ¡Compartido con éxito!');
             
             setTimeout(() => {
-                statusDiv.style.display = 'none';
-            }, 3000);
+                hideProgress();
+            }, 2000);
             
         } catch (err) {
             if (err.name !== 'AbortError') {
-                statusDiv.textContent = '❌ Error: ' + err.message;
-                statusDiv.className = 'status error';
+                showProgress(0, '❌ Error: ' + err.message, true);
+                setTimeout(() => {
+                    hideProgress();
+                }, 3000);
             } else {
-                statusDiv.textContent = '⚠️ Compartición cancelada';
-                statusDiv.className = 'status success';
+                showProgress(0, '⚠️ Compartición cancelada');
+                setTimeout(() => {
+                    hideProgress();
+                }, 2000);
             }
         }
     });
 
-    //  4️⃣ LÓGICA: Generar código QR de invitación
+    // 🆕 Funciones de barra de progreso
+    function showProgress(percent, message, isError = false) {
+        progressBar.classList.add('active');
+        progressFill.style.width = percent + '%';
+        progressText.textContent = message;
+        
+        if (percent > 0 && percent < 100) {
+            progressFill.classList.add('animating');
+        } else {
+            progressFill.classList.remove('animating');
+        }
+        
+        if (isError) {
+            progressFill.style.background = '#ef4444';
+        } else {
+            progressFill.style.background = '';
+        }
+    }
+    
+    function hideProgress() {
+        progressBar.classList.remove('active');
+        progressFill.style.width = '0%';
+        progressFill.style.background = '';
+        progressFill.classList.remove('animating');
+    }
+
+    // ============================================
+    //  GENERAR CÓDIGO QR
+    // ============================================
+    
     qrBtn.addEventListener('click', () => {
         console.log('📱 Generando código QR...');
         
-        // Limpiar QR anterior
         qrcodeContainer.innerHTML = '';
         
-        // Crear el mensaje que irá en el QR
         const qrMessage = `¡Hola! Te invito a usar ShareP2P para compartir archivos de forma rápida y segura.
 
 🔗 https://andryus0312-collab.github.io/sharep2p/
 
 💙 Hecho con 🩵 por Sr. Andryus`;
         
-        // Poner el enlace en el input
         qrLinkInput.value = 'https://andryus0312-collab.github.io/sharep2p/';
         
-        // Generar el código QR usando la API de Google (más confiable)
         try {
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrMessage)}&color=667eea`;
             
@@ -121,10 +238,10 @@ document.addEventListener('DOMContentLoaded', () => {
             qrImage.alt = 'Código QR de invitación';
             qrImage.style.width = '200px';
             qrImage.style.height = '200px';
+            qrImage.style.animation = 'zoomIn 0.5s ease-out';
             
             qrcodeContainer.appendChild(qrImage);
             
-            // Mostrar el modal
             setTimeout(() => {
                 qrModal.classList.add('active');
                 console.log('✅ QR generado exitosamente');
@@ -136,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 🆕 5️⃣ LÓGICA: Cerrar modal del QR
+    // Cerrar modal del QR
     closeQrModal.addEventListener('click', () => {
         qrModal.classList.remove('active');
     });
@@ -147,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 🆕 6️⃣ LÓGICA: Copiar enlace del QR
+    // Copiar enlace del QR
     copyLinkBtn.addEventListener('click', () => {
         qrLinkInput.select();
         qrLinkInput.setSelectionRange(0, 99999);
@@ -156,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
             navigator.clipboard.writeText(qrLinkInput.value);
             copyLinkBtn.textContent = '✅ Copiado';
             setTimeout(() => {
-                copyLinkBtn.textContent = ' Copiar';
+                copyLinkBtn.textContent = '📋 Copiar';
             }, 2000);
         } catch (error) {
             document.execCommand('copy');
@@ -167,7 +284,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 7️ LÓGICA: Consola de Depuración (La Lupa)
+    // ============================================
+    // 🔍 CONSOLA DE DEPURACIÓN
+    // ============================================
+    
     let logs = [];
     const addLog = (msg, type='info') => {
         logs.push({msg, type, time: new Date().toLocaleTimeString()});
@@ -183,6 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addLog(navigator.share ? '✅ Web Share API: OK' : '❌ Web Share API: Falta', navigator.share ? 'success' : 'error');
         addLog(window.location.protocol === 'https:' ? '✅ HTTPS: OK' : '⚠️ HTTPS: Falta', window.location.protocol === 'https:' ? 'success' : 'error');
         addLog('✅ Librería QR: Usando API externa', 'success');
+        addLog(document.body.classList.contains('dark-mode') ? ' Modo oscuro: ACTIVO' : '☀️ Modo claro: ACTIVO', 'info');
     });
 
     document.getElementById('closeDebug').addEventListener('click', () => debugPanel.classList.remove('active'));
