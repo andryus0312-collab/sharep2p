@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyLinkBtn = document.getElementById('copyLinkBtn');
     
     let selectedFiles = [];
-    let qrCodeInstance = null;
 
     // 2️⃣ LÓGICA: Cuando el usuario selecciona archivos
     fileInput.addEventListener('change', (e) => {
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedFiles = Array.from(e.target.files);
         
         if (selectedFiles.length > 0) {
-            // Mostrar la lista visualmente
             fileList.innerHTML = selectedFiles.map(file => `
                 <div class="file-item">
                     <span>📄 ${file.name}</span>
@@ -35,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `).join('');
             
-            // Activar el botón de compartir
             shareBtn.disabled = false;
             shareBtn.classList.add('active');
             shareBtn.textContent = `🚀 Compartir (${selectedFiles.length})`;
@@ -55,28 +52,26 @@ document.addEventListener('DOMContentLoaded', () => {
             statusDiv.textContent = '📤 Preparando archivos...';
             statusDiv.className = 'status success';
             
-            // Crear el mensaje de firma con emojis y enlace
             const signatureMessage = selectedFiles.map(file => {
-                return `🎉✨📤 *ARCHIVO COMPARTIDO* 📤✨🎉
+                return `🎉✨ *ARCHIVO COMPARTIDO* 📤✨🎉
 
 📄 *Nombre:* ${file.name}
- *Tamaño:* ${(file.size / 1024).toFixed(1)} KB
+📦 *Tamaño:* ${(file.size / 1024).toFixed(1)} KB
 
 ━━━━━━━━━━━━━━━━━━━━━━━
 📱 *Compartido a través de:*
-🚀 *ShareP2P* - Tu app de compartir archivos
+ *ShareP2P* - Tu app de compartir archivos
 
- *Visita la app:*
+🔗 *Visita la app:*
 👉 https://andryus0312-collab.github.io/sharep2p/
 ━━━━━━━━━━━━━━━━━━━━━━━
 
-💙 *Hecho con 🩵 por Sr. Andryus* 💙
-🌟 ¡Gracias por usar ShareP2P! `;
+💙 *Hecho con  por Sr. Andryus* 💙
+🌟 ¡Gracias por usar ShareP2P! 🌟`;
             }).join('\n\n━━━━━━━━━━━━━━━━━━━━━━━\n\n');
             
             statusDiv.textContent = '📤 Abriendo menú de compartir...';
             
-            // Llamar a la API nativa del celular con el mensaje personalizado
             await navigator.share({
                 files: selectedFiles,
                 title: '📤 Archivos compartidos con ShareP2P',
@@ -100,11 +95,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 🆕 4️⃣ LÓGICA: Generar código QR de invitación
+    //  4️⃣ LÓGICA: Generar código QR de invitación
     qrBtn.addEventListener('click', () => {
         console.log('📱 Generando código QR...');
         
-        // Limpiar QR anterior si existe
+        // Limpiar QR anterior
         qrcodeContainer.innerHTML = '';
         
         // Crear el mensaje que irá en el QR
@@ -112,87 +107,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
 🔗 https://andryus0312-collab.github.io/sharep2p/
 
-💙 Hecho con  por Sr. Andryus`;
+💙 Hecho con 🩵 por Sr. Andryus`;
         
         // Poner el enlace en el input
         qrLinkInput.value = 'https://andryus0312-collab.github.io/sharep2p/';
         
-        // Generar el código QR
-try {
-    // Limpiar contenedor primero
-    qrcodeContainer.innerHTML = '';
-    
-    // Verificar que QRCode esté disponible
-    if (typeof QRCode === 'undefined') {
-        throw new Error('La librería QR no está cargada');
-    }
-    
-    // Crear el QR con sintaxis compatible
-    qrCodeInstance = new QRCode(qrcodeContainer, {
-        text: qrMessage,
-        width: 200,
-        height: 200,
-        colorDark: '#667eea',
-        colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.H
-    });
-    
-    // Mostrar el modal después de un pequeño delay para asegurar renderizado
-    setTimeout(() => {
-        qrModal.classList.add('active');
-        console.log('✅ QR generado exitosamente');
-    }, 100);
-    
-} catch (error) {
-    console.error('❌ Error al generar QR:', error);
-    console.error('Detalles:', error.message);
-    alert('Error al generar el código QR: ' + error.message);
-}
+        // Generar el código QR usando la API de Google (más confiable)
+        try {
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrMessage)}&color=667eea`;
+            
+            const qrImage = document.createElement('img');
+            qrImage.src = qrUrl;
+            qrImage.alt = 'Código QR de invitación';
+            qrImage.style.width = '200px';
+            qrImage.style.height = '200px';
+            
+            qrcodeContainer.appendChild(qrImage);
             
             // Mostrar el modal
-            qrModal.classList.add('active');
-            console.log('✅ QR generado exitosamente');
+            setTimeout(() => {
+                qrModal.classList.add('active');
+                console.log('✅ QR generado exitosamente');
+            }, 100);
             
         } catch (error) {
             console.error('❌ Error al generar QR:', error);
-            alert('Error al generar el código QR');
+            alert('Error al generar el código QR: ' + error.message);
         }
     });
 
-    // 🆕 5️ LÓGICA: Cerrar modal del QR
+    // 🆕 5️⃣ LÓGICA: Cerrar modal del QR
     closeQrModal.addEventListener('click', () => {
         qrModal.classList.remove('active');
     });
 
-    // Cerrar modal al tocar fuera
     qrModal.addEventListener('click', (e) => {
         if (e.target === qrModal) {
             qrModal.classList.remove('active');
         }
     });
 
-    // 🆕 6️ LÓGICA: Copiar enlace del QR
+    // 🆕 6️⃣ LÓGICA: Copiar enlace del QR
     copyLinkBtn.addEventListener('click', () => {
         qrLinkInput.select();
-        qrLinkInput.setSelectionRange(0, 99999); // Para móviles
+        qrLinkInput.setSelectionRange(0, 99999);
         
         try {
             navigator.clipboard.writeText(qrLinkInput.value);
             copyLinkBtn.textContent = '✅ Copiado';
             setTimeout(() => {
-                copyLinkBtn.textContent = '📋 Copiar';
+                copyLinkBtn.textContent = ' Copiar';
             }, 2000);
         } catch (error) {
-            // Fallback para navegadores antiguos
             document.execCommand('copy');
             copyLinkBtn.textContent = '✅ Copiado';
             setTimeout(() => {
-                copyLinkBtn.textContent = ' Copiar';
+                copyLinkBtn.textContent = '📋 Copiar';
             }, 2000);
         }
     });
 
-    // 7️⃣ LÓGICA: Consola de Depuración (La Lupa)
+    // 7️ LÓGICA: Consola de Depuración (La Lupa)
     let logs = [];
     const addLog = (msg, type='info') => {
         logs.push({msg, type, time: new Date().toLocaleTimeString()});
@@ -207,7 +182,7 @@ try {
         addLog('🔍 Diagnóstico iniciado', 'info');
         addLog(navigator.share ? '✅ Web Share API: OK' : '❌ Web Share API: Falta', navigator.share ? 'success' : 'error');
         addLog(window.location.protocol === 'https:' ? '✅ HTTPS: OK' : '⚠️ HTTPS: Falta', window.location.protocol === 'https:' ? 'success' : 'error');
-        addLog(typeof QRCode !== 'undefined' ? '✅ Librería QR: Cargada' : '❌ Librería QR: Falta', typeof QRCode !== 'undefined' ? 'success' : 'error');
+        addLog('✅ Librería QR: Usando API externa', 'success');
     });
 
     document.getElementById('closeDebug').addEventListener('click', () => debugPanel.classList.remove('active'));
