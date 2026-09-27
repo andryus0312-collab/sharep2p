@@ -118,15 +118,36 @@ document.addEventListener('DOMContentLoaded', () => {
         qrLinkInput.value = 'https://andryus0312-collab.github.io/sharep2p/';
         
         // Generar el código QR
-        try {
-            qrCodeInstance = new QRCode(qrcodeContainer, {
-                text: qrMessage,
-                width: 200,
-                height: 200,
-                colorDark: '#667eea',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.H
-            });
+try {
+    // Limpiar contenedor primero
+    qrcodeContainer.innerHTML = '';
+    
+    // Verificar que QRCode esté disponible
+    if (typeof QRCode === 'undefined') {
+        throw new Error('La librería QR no está cargada');
+    }
+    
+    // Crear el QR con sintaxis compatible
+    qrCodeInstance = new QRCode(qrcodeContainer, {
+        text: qrMessage,
+        width: 200,
+        height: 200,
+        colorDark: '#667eea',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+    });
+    
+    // Mostrar el modal después de un pequeño delay para asegurar renderizado
+    setTimeout(() => {
+        qrModal.classList.add('active');
+        console.log('✅ QR generado exitosamente');
+    }, 100);
+    
+} catch (error) {
+    console.error('❌ Error al generar QR:', error);
+    console.error('Detalles:', error.message);
+    alert('Error al generar el código QR: ' + error.message);
+}
             
             // Mostrar el modal
             qrModal.classList.add('active');
