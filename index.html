@@ -10,38 +10,65 @@
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#667eea">
-    
-    <!-- 📱 Librería para generar códigos QR -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
+    <!--  Botón de modo oscuro -->
+    <button id="themeToggle" class="theme-toggle" title="Cambiar tema">🌙</button>
+
     <div class="container">
         <h1>📤 Compartir Archivos</h1>
         <p class="subtitle">Selecciona y comparte por Bluetooth o Wi-Fi</p>
         
         <div class="upload-section">
             <input type="file" id="fileInput" multiple accept="image/*,video/*,.pdf,.doc,.docx">
-            <label for="fileInput" class="upload-btn">📂 Seleccionar Archivos</label>
+            <label for="fileInput" class="upload-btn">
+                <span class="btn-icon"></span>
+                <span class="btn-text">Seleccionar Archivos</span>
+            </label>
         </div>
+
+        <!--  Vista previa de archivos -->
+        <div id="previewContainer" class="preview-container"></div>
 
         <div id="fileList" class="file-list"></div>
 
-        <button id="shareBtn" class="share-btn" disabled>🚀 Compartir</button>
+        <!-- 🆕 Barra de estado/progreso -->
+        <div id="progressBar" class="progress-bar">
+            <div id="progressFill" class="progress-fill"></div>
+            <div id="progressText" class="progress-text">Listo para compartir</div>
+        </div>
+
+        <button id="shareBtn" class="share-btn" disabled>
+            <span class="btn-icon">🚀</span>
+            <span class="btn-text">Compartir</span>
+        </button>
         
-        <!-- 🆕 NUEVO BOTÓN: Generar QR de invitación -->
-        <button id="qrBtn" class="qr-btn">📱 Generar QR de Invitación</button>
+        <!-- Botón QR -->
+        <button id="qrBtn" class="qr-btn">
+            <span class="btn-icon">📱</span>
+            <span class="btn-text">Generar QR de Invitación</span>
+        </button>
         
         <div id="status" class="status"></div>
     </div>
 
-    <!-- 🆕 NUEVO MODAL: Panel del código QR -->
+    <!-- 🆕 Modal del código QR -->
     <div id="qrModal" class="qr-modal">
         <div class="qr-modal-content">
             <div class="qr-modal-header">
                 <h2> Escanea para unirte</h2>
-                <button id="closeQrModal" class="close-qr-btn"></button>
+                <button id="closeQrModal" class="close-qr-btn">✕</button>
             </div>
             <div class="qr-modal-body">
+                <!-- 🔴 NUEVO: Tip de advertencia en rojo -->
+                <div class="qr-warning">
+                    <span class="warning-icon">⚠️</span>
+                    <p class="warning-text">
+                        <strong>IMPORTANTE:</strong> Este código QR <strong>NO envía archivos</strong>. 
+                        Solo sirve para <strong>compartir el enlace de la aplicación</strong> con otra persona.
+                    </p>
+                </div>
+
                 <p class="qr-message">¡Hola! Te invito a usar <strong>ShareP2P</strong> para compartir archivos de forma rápida y segura.</p>
                 <div id="qrcode" class="qrcode-container"></div>
                 <p class="qr-instruction"> Escanea este código con tu cámara</p>
@@ -54,7 +81,7 @@
         </div>
     </div>
 
-    <!-- 🔍 BOTÓN Y PANEL DE CONSOLA -->
+    <!--  Botón y panel de consola -->
     <button id="debugBtn" class="debug-btn">🔍</button>
     <div id="debugPanel" class="debug-panel">
         <div class="debug-header">
@@ -65,12 +92,12 @@
             <pre id="debugOutput">Toca el botón para iniciar...</pre>
         </div>
         <div class="debug-actions">
-            <button id="copyDebug" class="debug-action-btn"> Copiar</button>
-            <button id="clearDebug" class="debug-action-btn">️ Limpiar</button>
+            <button id="copyDebug" class="debug-action-btn">📋 Copiar</button>
+            <button id="clearDebug" class="debug-action-btn">🗑️ Limpiar</button>
         </div>
     </div>
 
     <!-- 🔗 JavaScript desde carpeta js -->
     <script src="js/app.js"></script>
 </body>
-                    </html>
+</html>
