@@ -3,42 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compartir Archivos P2P</title>
+    <title>ShareP2P - Compartir Archivos</title>
+    
+    <!-- 🌐 Favicon para la pestaña del navegador -->
+    <link rel="icon" type="image/png" sizes="96x96" href="icons/favicon-96x96.png">
+    <link rel="icon" type="image/x-icon" href="icons/favicon.ico">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
     
     <!-- 🔗 CSS desde carpeta css -->
     <link rel="stylesheet" href="css/styles.css">
     
-    <!-- 🌐 Favicon para la pestaña del navegador -->
-<link rel="icon" type="image/png" sizes="96x96" href="icons/favicon-96x96.png">
-<link rel="icon" type="image/x-icon" href="icons/favicon.ico">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-
-<!--  Manifest para PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#667eea">
+    <!--  Manifest para PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
 </head>
 <body>
-    <!--  Botón de modo oscuro -->
+    <!-- 🌙 Botón de modo oscuro -->
     <button id="themeToggle" class="theme-toggle" title="Cambiar tema">🌙</button>
 
     <div class="container">
-        <h1>📤 Compartir Archivos</h1>
-        <p class="subtitle">Selecciona y comparte por Bluetooth o Wi-Fi</p>
+        <!-- 🆕 Logo y nombre de la app -->
+        <div class="app-header">
+            <img src="icons/web-app-manifest-512x512.png" alt="ShareP2P Logo" class="app-logo">
+            <h1 class="app-title">ShareP2P</h1>
+            <p class="app-subtitle">Comparte archivos de forma rápida y segura</p>
+        </div>
         
         <div class="upload-section">
             <input type="file" id="fileInput" multiple accept="image/*,video/*,.pdf,.doc,.docx">
             <label for="fileInput" class="upload-btn">
-                <span class="btn-icon"></span>
+                <span class="btn-icon">📂</span>
                 <span class="btn-text">Seleccionar Archivos</span>
             </label>
         </div>
 
-        <!--  Vista previa de archivos -->
+        <!-- 🖼️ Vista previa de archivos -->
         <div id="previewContainer" class="preview-container"></div>
 
         <div id="fileList" class="file-list"></div>
 
-        <!-- 🆕 Barra de estado/progreso -->
+        <!--  Barra de progreso -->
         <div id="progressBar" class="progress-bar">
             <div id="progressFill" class="progress-fill"></div>
             <div id="progressText" class="progress-text">Listo para compartir</div>
@@ -49,7 +53,7 @@
             <span class="btn-text">Compartir</span>
         </button>
         
-        <!-- Botón QR -->
+        <!-- 📱 Botón QR -->
         <button id="qrBtn" class="qr-btn">
             <span class="btn-icon">📱</span>
             <span class="btn-text">Generar QR de Invitación</span>
@@ -62,36 +66,36 @@
     <div id="qrModal" class="qr-modal">
         <div class="qr-modal-content">
             <div class="qr-modal-header">
-                <h2> Escanea para unirte</h2>
+                <h2>📱 Escanea para unirte a ShareP2P</h2>
                 <button id="closeQrModal" class="close-qr-btn">✕</button>
             </div>
             <div class="qr-modal-body">
-                <!-- 🔴 NUEVO: Tip de advertencia en rojo -->
+                <!-- ⚠️ Tip de advertencia en rojo -->
                 <div class="qr-warning">
-                    <span class="warning-icon">⚠️</span>
+                    <span class="warning-icon">️</span>
                     <p class="warning-text">
                         <strong>IMPORTANTE:</strong> Este código QR <strong>NO envía archivos</strong>. 
                         Solo sirve para <strong>compartir el enlace de la aplicación</strong> con otra persona.
                     </p>
                 </div>
 
-                <p class="qr-message">¡Hola! Te invito a usar <strong>ShareP2P</strong> para compartir archivos de forma rápida y segura.</p>
+                <p class="qr-message">¡Hola! Te invito a usar <strong>ShareP2P</strong> para compartir archivos de forma rápida, segura y sin complicaciones.</p>
                 <div id="qrcode" class="qrcode-container"></div>
-                <p class="qr-instruction"> Escanea este código con tu cámara</p>
+                <p class="qr-instruction">👆 Escanea este código con la cámara de tu celular</p>
                 <div class="qr-link-box">
-                    <p class="qr-link-label">O copia este enlace:</p>
+                    <p class="qr-link-label">O copia este enlace manualmente:</p>
                     <input type="text" id="qrLinkInput" class="qr-link-input" readonly>
-                    <button id="copyLinkBtn" class="copy-link-btn">📋 Copiar</button>
+                    <button id="copyLinkBtn" class="copy-link-btn">📋 Copiar enlace</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!--  Botón y panel de consola -->
+    <!-- 🔍 Botón y panel de consola -->
     <button id="debugBtn" class="debug-btn">🔍</button>
     <div id="debugPanel" class="debug-panel">
         <div class="debug-header">
-            <span>🔍 Consola de Depuración</span>
+            <span> Consola de Depuración</span>
             <button id="closeDebug" class="close-btn">✕</button>
         </div>
         <div class="debug-content">
@@ -106,4 +110,4 @@
     <!-- 🔗 JavaScript desde carpeta js -->
     <script src="js/app.js"></script>
 </body>
-</html>
+                </html>
