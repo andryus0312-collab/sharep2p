@@ -10,9 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const debugBtn = document.getElementById('debugBtn');
     const debugPanel = document.getElementById('debugPanel');
     
+    // 🆕 NUEVOS: Elementos del QR
+    const qrBtn = document.getElementById('qrBtn');
+    const qrModal = document.getElementById('qrModal');
+    const closeQrModal = document.getElementById('closeQrModal');
+    const qrcodeContainer = document.getElementById('qrcode');
+    const qrLinkInput = document.getElementById('qrLinkInput');
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
+    
     let selectedFiles = [];
+    let qrCodeInstance = null;
 
-    // 2️ LÓGICA: Cuando el usuario selecciona archivos
+    // 2️⃣ LÓGICA: Cuando el usuario selecciona archivos
     fileInput.addEventListener('change', (e) => {
         console.log('📂 Archivos detectados:', e.target.files.length);
         selectedFiles = Array.from(e.target.files);
@@ -26,12 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `).join('');
             
-            // Activar el botón de compartir (cambio de estilo y texto)
+            // Activar el botón de compartir
             shareBtn.disabled = false;
             shareBtn.classList.add('active');
             shareBtn.textContent = `🚀 Compartir (${selectedFiles.length})`;
         } else {
-            // Si no hay archivos, limpiar todo
             fileList.innerHTML = '';
             shareBtn.disabled = true;
             shareBtn.classList.remove('active');
@@ -44,26 +52,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedFiles.length === 0) return;
         
         try {
-            statusDiv.textContent = ' Preparando archivos...';
+            statusDiv.textContent = '📤 Preparando archivos...';
             statusDiv.className = 'status success';
             
             // Crear el mensaje de firma con emojis y enlace
             const signatureMessage = selectedFiles.map(file => {
-                return `🎉✨📤 *ARCHIVO COMPARTIDO* 📤✨
+                return `🎉✨📤 *ARCHIVO COMPARTIDO* 📤✨🎉
 
 📄 *Nombre:* ${file.name}
-📦 *Tamaño:* ${(file.size / 1024).toFixed(1)} KB
+ *Tamaño:* ${(file.size / 1024).toFixed(1)} KB
 
 ━━━━━━━━━━━━━━━━━━━━━━━
- *Compartido a través de:*
-📱 *ShareP2P* - Tu app de compartir archivos
+📱 *Compartido a través de:*
+🚀 *ShareP2P* - Tu app de compartir archivos
 
-🔗 *Visita la app:*
+ *Visita la app:*
 👉 https://andryus0312-collab.github.io/sharep2p/
 ━━━━━━━━━━━━━━━━━━━━━━━
 
 💙 *Hecho con 🩵 por Sr. Andryus* 💙
- ¡Gracias por usar ShareP2P! 🌟`;
+🌟 ¡Gracias por usar ShareP2P! `;
             }).join('\n\n━━━━━━━━━━━━━━━━━━━━━━━\n\n');
             
             statusDiv.textContent = '📤 Abriendo menú de compartir...';
@@ -77,13 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
             
             statusDiv.textContent = '✅ ¡Compartido con éxito!';
             
-            // Ocultar el mensaje después de 3 segundos
             setTimeout(() => {
                 statusDiv.style.display = 'none';
             }, 3000);
             
         } catch (err) {
-            // Si el usuario cancela, no mostramos error grave
             if (err.name !== 'AbortError') {
                 statusDiv.textContent = '❌ Error: ' + err.message;
                 statusDiv.className = 'status error';
@@ -94,7 +100,78 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 4️⃣ LÓGICA: Consola de Depuración (La Lupa)
+    // 🆕 4️⃣ LÓGICA: Generar código QR de invitación
+    qrBtn.addEventListener('click', () => {
+        console.log('📱 Generando código QR...');
+        
+        // Limpiar QR anterior si existe
+        qrcodeContainer.innerHTML = '';
+        
+        // Crear el mensaje que irá en el QR
+        const qrMessage = `¡Hola! Te invito a usar ShareP2P para compartir archivos de forma rápida y segura.
+
+🔗 https://andryus0312-collab.github.io/sharep2p/
+
+💙 Hecho con  por Sr. Andryus`;
+        
+        // Poner el enlace en el input
+        qrLinkInput.value = 'https://andryus0312-collab.github.io/sharep2p/';
+        
+        // Generar el código QR
+        try {
+            qrCodeInstance = new QRCode(qrcodeContainer, {
+                text: qrMessage,
+                width: 200,
+                height: 200,
+                colorDark: '#667eea',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            // Mostrar el modal
+            qrModal.classList.add('active');
+            console.log('✅ QR generado exitosamente');
+            
+        } catch (error) {
+            console.error('❌ Error al generar QR:', error);
+            alert('Error al generar el código QR');
+        }
+    });
+
+    // 🆕 5️ LÓGICA: Cerrar modal del QR
+    closeQrModal.addEventListener('click', () => {
+        qrModal.classList.remove('active');
+    });
+
+    // Cerrar modal al tocar fuera
+    qrModal.addEventListener('click', (e) => {
+        if (e.target === qrModal) {
+            qrModal.classList.remove('active');
+        }
+    });
+
+    // 🆕 6️ LÓGICA: Copiar enlace del QR
+    copyLinkBtn.addEventListener('click', () => {
+        qrLinkInput.select();
+        qrLinkInput.setSelectionRange(0, 99999); // Para móviles
+        
+        try {
+            navigator.clipboard.writeText(qrLinkInput.value);
+            copyLinkBtn.textContent = '✅ Copiado';
+            setTimeout(() => {
+                copyLinkBtn.textContent = '📋 Copiar';
+            }, 2000);
+        } catch (error) {
+            // Fallback para navegadores antiguos
+            document.execCommand('copy');
+            copyLinkBtn.textContent = '✅ Copiado';
+            setTimeout(() => {
+                copyLinkBtn.textContent = ' Copiar';
+            }, 2000);
+        }
+    });
+
+    // 7️⃣ LÓGICA: Consola de Depuración (La Lupa)
     let logs = [];
     const addLog = (msg, type='info') => {
         logs.push({msg, type, time: new Date().toLocaleTimeString()});
@@ -105,10 +182,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     debugBtn.addEventListener('click', () => {
         debugPanel.classList.add('active');
-        logs = []; // Limpiar logs anteriores
+        logs = [];
         addLog('🔍 Diagnóstico iniciado', 'info');
         addLog(navigator.share ? '✅ Web Share API: OK' : '❌ Web Share API: Falta', navigator.share ? 'success' : 'error');
         addLog(window.location.protocol === 'https:' ? '✅ HTTPS: OK' : '⚠️ HTTPS: Falta', window.location.protocol === 'https:' ? 'success' : 'error');
+        addLog(typeof QRCode !== 'undefined' ? '✅ Librería QR: Cargada' : '❌ Librería QR: Falta', typeof QRCode !== 'undefined' ? 'success' : 'error');
     });
 
     document.getElementById('closeDebug').addEventListener('click', () => debugPanel.classList.remove('active'));
