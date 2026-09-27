@@ -1,4 +1,84 @@
 /* ============================================
+   🎨 VARIABLES DE TEMA (MODO CLARO/OSCURO)
+   ============================================ */
+:root {
+    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --container-bg: #ffffff;
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --file-item-bg: #f0f0f0;
+    --file-item-text: #333333;
+    --upload-btn-bg: #667eea;
+    --upload-btn-text: #ffffff;
+    --share-btn-bg: #10b981;
+    --share-btn-text: #ffffff;
+    --share-btn-disabled-bg: #cccccc;
+    --share-btn-disabled-text: #666666;
+    --qr-btn-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --qr-btn-text: #ffffff;
+    --status-success-bg: #d1fae5;
+    --status-success-text: #065f46;
+    --status-error-bg: #fee2e2;
+    --status-error-text: #991b1b;
+    --progress-bg: #e5e7eb;
+    --progress-fill: #667eea;
+    --progress-text: #333333;
+    --qr-modal-bg: #ffffff;
+    --qr-warning-bg: #fee2e2;
+    --qr-warning-text: #991b1b;
+    --qr-warning-border: #ef4444;
+    --link-box-bg: #f0f0f0;
+    --link-input-bg: #ffffff;
+    --link-input-border: #dddddd;
+    --link-input-text: #333333;
+    --debug-panel-bg: #1e1e1e;
+    --debug-panel-text: #00ff00;
+    --theme-toggle-bg: #ffffff;
+    --theme-toggle-icon: "🌙";
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --preview-border: #e5e7eb;
+}
+
+/* Modo oscuro */
+body.dark-mode {
+    --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    --container-bg: #2d2d44;
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+    --file-item-bg: #3d3d5c;
+    --file-item-text: #ffffff;
+    --upload-btn-bg: #5568d3;
+    --upload-btn-text: #ffffff;
+    --share-btn-bg: #059669;
+    --share-btn-text: #ffffff;
+    --share-btn-disabled-bg: #555555;
+    --share-btn-disabled-text: #999999;
+    --qr-btn-bg: linear-gradient(135deg, #5568d3 0%, #6b4fa0 100%);
+    --qr-btn-text: #ffffff;
+    --status-success-bg: #064e3b;
+    --status-success-text: #6ee7b7;
+    --status-error-bg: #7f1d1d;
+    --status-error-text: #fca5a5;
+    --progress-bg: #3d3d5c;
+    --progress-fill: #818cf8;
+    --progress-text: #ffffff;
+    --qr-modal-bg: #2d2d44;
+    --qr-warning-bg: #7f1d1d;
+    --qr-warning-text: #fca5a5;
+    --qr-warning-border: #ef4444;
+    --link-box-bg: #3d3d5c;
+    --link-input-bg: #2d2d44;
+    --link-input-border: #555555;
+    --link-input-text: #ffffff;
+    --debug-panel-bg: #0f0f0f;
+    --debug-panel-text: #00ff00;
+    --theme-toggle-bg: #2d2d44;
+    --theme-toggle-icon: "☀️";
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --preview-border: #555555;
+}
+
+/* ============================================
    ESTILOS GENERALES
    ============================================ */
 * {
@@ -9,34 +89,50 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--bg-gradient);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
+    transition: background 0.5s ease;
 }
 
 .container {
-    background: white;
+    background: var(--container-bg);
     border-radius: 20px;
     padding: 30px;
     max-width: 500px;
     width: 100%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 60px var(--shadow-color);
     text-align: center;
+    transition: background 0.5s ease, box-shadow 0.5s ease;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 h1 {
     margin-bottom: 10px;
-    color: #333;
+    color: var(--text-primary);
     font-size: 24px;
+    transition: color 0.5s ease;
 }
 
 .subtitle {
-    color: #666;
+    color: var(--text-secondary);
     margin-bottom: 25px;
     font-size: 14px;
+    transition: color 0.5s ease;
 }
 
 .upload-section {
@@ -48,15 +144,18 @@ h1 {
 }
 
 .upload-btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     padding: 15px 30px;
-    background: #667eea;
-    color: white;
+    background: var(--upload-btn-bg);
+    color: var(--upload-btn-text);
     border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
-    transition: transform 0.2s;
+    transition: all 0.3s ease;
     width: 100%;
     text-align: center;
 }
@@ -65,14 +164,73 @@ h1 {
     transform: scale(0.95);
 }
 
+.upload-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/*  Vista previa de imágenes */
+.preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 15px 0;
+    min-height: 0;
+}
+
+.preview-item {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid var(--preview-border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    animation: zoomIn 0.4s ease-out;
+    transition: transform 0.3s ease, border-color 0.5s ease;
+}
+
+.preview-item:hover {
+    transform: scale(1.1);
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.preview-item .file-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    background: var(--file-item-bg);
+    transition: background 0.5s ease;
+}
+
 .file-list {
-    margin: 20px 0;
+    margin: 15px 0;
     min-height: 20px;
     text-align: left;
 }
 
 .file-item {
-    background: #f0f0f0;
+    background: var(--file-item-bg);
     padding: 10px 15px;
     margin: 8px 0;
     border-radius: 8px;
@@ -80,27 +238,102 @@ h1 {
     justify-content: space-between;
     align-items: center;
     font-size: 14px;
-    color: #333;
+    color: var(--file-item-text);
+    transition: all 0.3s ease, background 0.5s ease, color 0.5s ease;
+    animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* 🆕 Barra de progreso */
+.progress-bar {
+    width: 100%;
+    height: 50px;
+    background: var(--progress-bg);
+    border-radius: 10px;
+    margin: 15px 0;
+    position: relative;
+    overflow: hidden;
+    display: none;
+    transition: background 0.5s ease;
+}
+
+.progress-bar.active {
+    display: block;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--progress-fill);
+    border-radius: 10px;
+    transition: width 0.5s ease, background 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill.animating {
+    animation: progressPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes progressPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--progress-text);
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+    transition: color 0.5s ease;
 }
 
 /* Botón de compartir */
 .share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     width: 100%;
     padding: 15px;
-    background: #ccc;
-    color: #666;
+    background: var(--share-btn-disabled-bg);
+    color: var(--share-btn-disabled-text);
     border: none;
     border-radius: 10px;
     font-size: 18px;
     font-weight: bold;
     cursor: not-allowed;
-    transition: all 0.3s;
+    transition: all 0.3s ease, background 0.5s ease, color 0.5s ease;
     margin-bottom: 12px;
 }
 
 .share-btn.active {
-    background: #10b981;
-    color: white;
+    background: var(--share-btn-bg);
+    color: var(--share-btn-text);
     cursor: pointer;
 }
 
@@ -108,23 +341,37 @@ h1 {
     transform: scale(0.98);
 }
 
-/* 🆕 NUEVO: Botón de QR */
+.share-btn.active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Botón QR */
 .qr-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: var(--qr-btn-bg);
+    color: var(--qr-btn-text);
     border: none;
     border-radius: 10px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     margin-bottom: 12px;
 }
 
 .qr-btn:active {
     transform: scale(0.98);
+}
+
+.qr-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .status {
@@ -134,22 +381,61 @@ h1 {
     text-align: center;
     display: none;
     font-size: 14px;
+    transition: all 0.3s ease;
 }
 
 .status.success {
-    background: #d1fae5;
-    color: #065f46;
+    background: var(--status-success-bg);
+    color: var(--status-success-text);
     display: block;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .status.error {
-    background: #fee2e2;
-    color: #991b1b;
+    background: var(--status-error-bg);
+    color: var(--status-error-text);
     display: block;
+    animation: shake 0.4s ease-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
 }
 
 /* ============================================
-    NUEVO: MODAL DEL CÓDIGO QR
+   🌙 BOTÓN DE MODO OSCURO
+   ============================================ */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--theme-toggle-bg);
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    z-index: 9999;
+    transition: all 0.3s ease, background 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:active {
+    transform: scale(0.9) rotate(180deg);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* ============================================
+   🆕 MODAL DEL CÓDIGO QR
    ============================================ */
 .qr-modal {
     display: none;
@@ -163,20 +449,23 @@ h1 {
     justify-content: center;
     align-items: center;
     padding: 20px;
+    backdrop-filter: blur(5px);
 }
 
 .qr-modal.active {
     display: flex;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .qr-modal-content {
-    background: white;
+    background: var(--qr-modal-bg);
     border-radius: 20px;
     max-width: 400px;
     width: 100%;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    animation: slideUp 0.3s ease-out;
+    animation: slideUp 0.4s ease-out;
+    transition: background 0.5s ease;
 }
 
 @keyframes slideUp {
@@ -216,6 +505,11 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.close-qr-btn:hover {
+    transform: rotate(90deg);
 }
 
 .qr-modal-body {
@@ -223,11 +517,53 @@ h1 {
     text-align: center;
 }
 
+/* 🔴 NUEVO: Tip de advertencia en rojo */
+.qr-warning {
+    background: var(--qr-warning-bg);
+    border-left: 4px solid var(--qr-warning-border);
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    text-align: left;
+    animation: pulse 2s ease-in-out infinite;
+    transition: background 0.5s ease;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+    }
+}
+
+.warning-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.warning-text {
+    color: var(--qr-warning-text);
+    font-size: 13px;
+    margin: 0;
+    line-height: 1.4;
+    transition: color 0.5s ease;
+}
+
+.warning-text strong {
+    color: var(--qr-warning-border);
+}
+
 .qr-message {
-    color: #333;
+    color: var(--text-primary);
     font-size: 14px;
     margin-bottom: 20px;
     line-height: 1.5;
+    transition: color 0.5s ease;
 }
 
 .qrcode-container {
@@ -241,34 +577,38 @@ h1 {
 }
 
 .qr-instruction {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 13px;
     margin-bottom: 20px;
+    transition: color 0.5s ease;
 }
 
 .qr-link-box {
-    background: #f0f0f0;
+    background: var(--link-box-bg);
     padding: 12px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    transition: background 0.5s ease;
 }
 
 .qr-link-label {
     font-size: 12px;
-    color: #666;
+    color: var(--text-secondary);
     margin: 0;
+    transition: color 0.5s ease;
 }
 
 .qr-link-input {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--link-input-border);
     border-radius: 6px;
     font-size: 12px;
-    background: white;
-    color: #333;
+    background: var(--link-input-bg);
+    color: var(--link-input-text);
+    transition: all 0.5s ease;
 }
 
 .copy-link-btn {
@@ -280,10 +620,12 @@ h1 {
     cursor: pointer;
     font-size: 12px;
     font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 .copy-link-btn:active {
     background: #5568d3;
+    transform: scale(0.95);
 }
 
 /* ============================================
@@ -303,6 +645,15 @@ h1 {
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
     z-index: 9999;
+    transition: transform 0.3s ease;
+}
+
+.debug-btn:active {
+    transform: scale(0.9);
+}
+
+.debug-btn:hover {
+    transform: scale(1.1);
 }
 
 .debug-panel {
@@ -312,8 +663,8 @@ h1 {
     left: 20px;
     max-width: 400px;
     max-height: 60vh;
-    background: #1e1e1e;
-    color: #00ff00;
+    background: var(--debug-panel-bg);
+    color: var(--debug-panel-text);
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     z-index: 9998;
@@ -322,10 +673,12 @@ h1 {
     overflow: hidden;
     font-family: 'Courier New', monospace;
     font-size: 12px;
+    transition: background 0.5s ease;
 }
 
 .debug-panel.active {
     display: flex;
+    animation: slideUp 0.3s ease-out;
 }
 
 .debug-header {
@@ -345,6 +698,11 @@ h1 {
     color: white;
     font-size: 20px;
     cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.close-btn:hover {
+    transform: rotate(90deg);
 }
 
 .debug-content {
@@ -376,6 +734,12 @@ h1 {
     border-radius: 6px;
     cursor: pointer;
     font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.debug-action-btn:active {
+    background: #5568d3;
+    transform: scale(0.95);
 }
 
 .log-line {
@@ -384,6 +748,7 @@ h1 {
     border-left: 3px solid #667eea;
     background: rgba(102, 126, 234, 0.1);
     color: #ddd;
+    animation: slideIn 0.3s ease-out;
 }
 
 .log-line.error {
@@ -394,4 +759,4 @@ h1 {
 .log-line.success {
     border-left-color: #00ff00;
     color: #00ff00;
-   }
+}
