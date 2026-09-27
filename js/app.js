@@ -166,11 +166,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
             //  Fase 3 - Éxito
-            showProgress(100, '✅ ¡Compartido con éxito!');
-            
-            setTimeout(() => {
-                hideProgress();
-            }, 2000);
+showProgress(100, '✅ ¡Compartido con éxito!');
+
+// 🆕 Limpiar todo después de 2.5 segundos
+setTimeout(() => {
+    hideProgress();
+    resetApp();
+}, 2500);
             
         } catch (err) {
             if (err.name !== 'AbortError') {
@@ -311,4 +313,30 @@ document.addEventListener('DOMContentLoaded', () => {
         logs = []; 
         document.getElementById('debugOutput').innerHTML = ''; 
     });
+
+    //  Función para reiniciar la app después de compartir
+function resetApp() {
+    console.log('🧹 Reiniciando app...');
+    
+    // Limpiar archivos seleccionados
+    selectedFiles = [];
+    
+    // Limpiar vista previa
+    previewContainer.innerHTML = '';
+    
+    // Limpiar lista de archivos
+    fileList.innerHTML = '';
+    
+    // Resetear input de archivos (para que pueda seleccionar el mismo archivo de nuevo)
+    fileInput.value = '';
+    
+    // Desactivar botón de compartir
+    shareBtn.disabled = true;
+    shareBtn.classList.remove('active');
+    shareBtn.querySelector('.btn-text').textContent = 'Compartir';
+    
+    console.log('✅ App reiniciada, lista para nueva selección');
+}
+
+    
 });
