@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compartir Archivos P2P</title>
     
-    <!-- 🔗 Aquí conectamos el CSS desde la carpeta css -->
+    <!-- 🔗 CSS desde carpeta css -->
     <link rel="stylesheet" href="css/styles.css">
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#667eea">
+    
+    <!-- 📱 Librería para generar códigos QR -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -24,7 +27,31 @@
         <div id="fileList" class="file-list"></div>
 
         <button id="shareBtn" class="share-btn" disabled>🚀 Compartir</button>
+        
+        <!-- 🆕 NUEVO BOTÓN: Generar QR de invitación -->
+        <button id="qrBtn" class="qr-btn">📱 Generar QR de Invitación</button>
+        
         <div id="status" class="status"></div>
+    </div>
+
+    <!-- 🆕 NUEVO MODAL: Panel del código QR -->
+    <div id="qrModal" class="qr-modal">
+        <div class="qr-modal-content">
+            <div class="qr-modal-header">
+                <h2> Escanea para unirte</h2>
+                <button id="closeQrModal" class="close-qr-btn"></button>
+            </div>
+            <div class="qr-modal-body">
+                <p class="qr-message">¡Hola! Te invito a usar <strong>ShareP2P</strong> para compartir archivos de forma rápida y segura.</p>
+                <div id="qrcode" class="qrcode-container"></div>
+                <p class="qr-instruction"> Escanea este código con tu cámara</p>
+                <div class="qr-link-box">
+                    <p class="qr-link-label">O copia este enlace:</p>
+                    <input type="text" id="qrLinkInput" class="qr-link-input" readonly>
+                    <button id="copyLinkBtn" class="copy-link-btn">📋 Copiar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- 🔍 BOTÓN Y PANEL DE CONSOLA -->
@@ -43,7 +70,7 @@
         </div>
     </div>
 
-    <!-- 🔗 Aquí conectamos el JavaScript desde la carpeta js -->
+    <!-- 🔗 JavaScript desde carpeta js -->
     <script src="js/app.js"></script>
 </body>
-</html>
+                    </html>
