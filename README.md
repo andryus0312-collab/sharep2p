@@ -131,6 +131,19 @@ https://tu-usuario.github.io/nombre-del-repo/
 
 ---
 
+## 🔒 Privacidad y Retención de Datos
+
+En **ShareP2P**, la privacidad es una prioridad. Queremos ser totalmente transparentes sobre cómo manejamos los datos:
+
+- **Sin almacenamiento de archivos:** La aplicación **NUNCA** sube, almacena ni tiene acceso al contenido de los archivos que compartes. La transferencia se realiza directamente entre dispositivos o mediante los servicios nativos de tu sistema operativo (Bluetooth, WhatsApp, etc.).
+- **Registros anónimos de uso:** Para mejorar la aplicación, se guardan registros anónimos de las transferencias (nombre del archivo, tamaño, método usado y fecha). **No se guarda ningún dato personal ni contenido del archivo.**
+- **Auto-eliminación:** Todos los registros de uso se **eliminan automáticamente de la base de datos cada 3 días** mediante una política de retención automática. Esto garantiza que no se acumule información innecesaria y se respete tu privacidad.
+- **Cero rastreo:** No utilizamos cookies de seguimiento, ni analizamos tu ubicación GPS, ni vendemos datos a terceros.
+
+*Si tienes alguna duda sobre nuestra política de privacidad, puedes contactarnos a través de los issues del repositorio.*
+
+---
+
 ## 🤝 Cómo Contribuir
 
 ¡Las contribuciones son bienvenidas! 🎉
