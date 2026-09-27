@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compartir Archivos P2P</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+</head>
+<body>
+    <div class="container">
+        <h1>📤 Compartir Archivos</h1>
+        <p class="subtitle">Selecciona y comparte por Bluetooth o Wi-Fi</p>
+        
+        <div class="upload-section">
+            <input type="file" id="fileInput" multiple accept="image/*,video/*,.pdf,.doc,.docx">
+            <label for="fileInput" class="upload-btn">
+                📂 Seleccionar Archivos
+            </label>
+        </div>
+
+        <div id="fileList" class="file-list"></div>
+
+        <button id="shareBtn" class="share-btn" disabled>
+            🚀 Compartir
+        </button>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <!-- 🔍 BOTÓN FLOTANTE DE CONSOLA -->
+    <button id="debugBtn" class="debug-btn" title="Abrir consola">🔍</button>
+
+    <!-- 🔍 PANEL DE CONSOLA FLOTANTE -->
+    <div id="debugPanel" class="debug-panel">
+        <div class="debug-header">
+            <span>🔍 Consola de Depuración</span>
+            <button id="closeDebug" class="close-btn">✕</button>
+        </div>
+        <div class="debug-content">
+            <pre id="debugOutput">Cargando información...</pre>
+        </div>
+        <div class="debug-actions">
+            <button id="copyDebug" class="debug-action-btn">📋 Copiar</button>
+            <button id="clearDebug" class="debug-action-btn">🗑️ Limpiar</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+</body>
+</html>
