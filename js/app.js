@@ -315,8 +315,8 @@ https://andryus0312-collab.github.io/sharep2p/
     debugBtn.addEventListener('click', () => {
         debugPanel.classList.add('active');
         logs = [];
-        addLog('🔍 Diagnóstico iniciado', 'info');
-        addLog(navigator.share ? '✅ Web Share API: OK' : '❌ Web Share API: Falta', navigator.share ? 'success' : 'error');
+        addLog('🔍 Diagnóstico iniciado', 'info');const canShareFiles = navigator.canShare && navigator.canShare({ files: [new File([''], 'test.txt')] });
+addLog(canShareFiles ? '✅ Web Share API (Archivos): OK' : '⚠️ Web Share API (Archivos): No soportado (Modo Descarga activado)', canShareFiles ? 'success' : 'info');
         addLog(window.location.protocol === 'https:' ? '✅ HTTPS: OK' : '⚠️ HTTPS: Falta', window.location.protocol === 'https:' ? 'success' : 'error');
         addLog('✅ Librería QR: Usando API externa', 'success');
         addLog(document.body.classList.contains('dark-mode') ? ' Modo oscuro: ACTIVO' : '☀️ Modo claro: ACTIVO', 'info');
