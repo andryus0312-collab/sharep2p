@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const SUPABASE_KEY = 'PEGA_TU_API_KEY_AQUI'; 
     
     let supabaseClient = null;
-    if (window.supabase && SUPABASE_KEY !== 'PEGA_TU_API_KEY_AQUI') {
+    if (window.supabase && SUPABASE_KEY !== 'sb_publishable_Zpx1PAelqWg4Epk2CWI6uA_ReFFDjtL') {
         supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         console.log('✅ Supabase conectado');
     } else {
