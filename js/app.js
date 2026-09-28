@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2ZmtqZGNhc3BhZXNtanZzaXl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MTQzNzgsImV4cCI6MjEwNjE5MDM3OH0.vnGTTA5eJa9eH8xh-pkBpMsQlkocXNDKVI_MSlFAbFI'; 
     
     let supabaseClient = null;
-    if (window.supabase && SUPABASE_KEY !=='sb_publishable_Zpx1PAelqWg4Epk2CWI6uA_ReFFDjtL') {
+    if (window.supabase && SUPABASE_KEY !=='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2ZmtqZGNhc3BhZXNtanZzaXl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MTQzNzgsImV4cCI6MjEwNjE5MDM3OH0.vnGTTA5eJa9eH8xh-pkBpMsQlkocXNDKVI_MSlFAbFI') {
         supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         console.log('✅ Supabase conectado');
     } else {
