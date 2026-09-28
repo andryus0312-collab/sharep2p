@@ -1,4 +1,3 @@
-// Esperar a que la página cargue completamente
 document.addEventListener('DOMContentLoaded', () => {
     console.log('✅ DOM Cargado - App iniciada');
 
@@ -35,11 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) { console.error(e); }
     }
 
-    // 1️⃣ Identificar los elementos del HTML
+    // 1️⃣ Elementos del HTML
     const fileInput = document.getElementById('fileInput');
     const fileList = document.getElementById('fileList');
     const shareBtn = document.getElementById('shareBtn');
-    const statusDiv = document.getElementById('status');
     const debugBtn = document.getElementById('debugBtn');
     const debugPanel = document.getElementById('debugPanel');
     const previewContainer = document.getElementById('previewContainer');
@@ -48,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressText = document.getElementById('progressText');
     const themeToggle = document.getElementById('themeToggle');
     
-    // Elementos del QR
     const qrBtn = document.getElementById('qrBtn');
     const qrModal = document.getElementById('qrModal');
     const closeQrModal = document.getElementById('closeQrModal');
@@ -58,9 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let selectedFiles = [];
 
-    // ============================================
     // 🌙 MODO OSCURO
-    // ============================================
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
@@ -74,9 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
 
-    // ============================================
     // 📂 SELECCIÓN DE ARCHIVOS
-    // ============================================
     fileInput.addEventListener('change', (e) => {
         selectedFiles = Array.from(e.target.files);
 
@@ -93,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
             shareBtn.disabled = false;
             shareBtn.classList.add('active');
             
-            // Detectar PC vs Móvil
             const canShare = navigator.canShare && navigator.canShare({ files: selectedFiles });
             shareBtn.querySelector('.btn-text').textContent = canShare ? `Compartir (${selectedFiles.length})` : `Descargar (${selectedFiles.length})`;
             
@@ -136,9 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return (bytes / 1048576).toFixed(1) + ' MB';
     }
 
-    // ============================================
     // 🚀 COMPARTIR O DESCARGAR (CON SUPABASE)
-    // ============================================
     shareBtn.addEventListener('click', async () => {
         if (selectedFiles.length === 0) return;
 
@@ -150,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const signatureMessage = `🎉✨ *ARCHIVO COMPARTIDO* 📤✨\n🚀 ShareP2P\n🔗 https://andryus0312-collab.github.io/sharep2p/\n💙 Hecho con 💙 por Sr. Andryus`;
 
             if (canShareFiles) {
-                // MÓVIL
                 showProgress(50, '📤 Abriendo menú nativo...');
                 await navigator.share({
                     files: selectedFiles,
@@ -158,13 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: signatureMessage
                 });
                 
-                // Registrar en DB
                 for (const file of selectedFiles) await logTransfer(file, 'web_share');
-                
                 showProgress(100, '✅ ¡Compartido con éxito!');
 
             } else {
-                // PC (DESCARGA)
                 showProgress(50, '💻 Descargando a tu equipo...');
                 
                 for (const file of selectedFiles) {
@@ -177,9 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.body.removeChild(a);
                     URL.revokeObjectURL(url);
                     
-                    // Registrar en DB
                     await logTransfer(file, 'download');
-                    
                     await new Promise(resolve => setTimeout(resolve, 300));
                 }
                 showProgress(100, '✅ ¡Descarga completada!');
@@ -209,9 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
         progressFill.style.width = '0%';
     }
 
-    // ============================================
     // 📱 GENERAR CÓDIGO QR
-    // ============================================
     qrBtn.addEventListener('click', () => {
         qrcodeContainer.innerHTML = '';
         const qrMessage = `¡Hola! Te invito a usar ShareP2P.\n🔗 https://andryus0312-collab.github.io/sharep2p/`;
@@ -237,9 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => copyLinkBtn.textContent = '📋 Copiar enlace', 2000);
     });
 
-    // ============================================
     // 🔍 CONSOLA DE DEPURACIÓN
-    // ============================================
     let logs = [];
     const addLog = (msg, type = 'info') => {
         logs.push({ msg, type, time: new Date().toLocaleTimeString() });
@@ -273,9 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
         shareBtn.querySelector('.btn-text').textContent = 'Compartir';
     }
 
-    // ============================================
     // ⚡ SERVICE WORKER
-    // ============================================
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js')
