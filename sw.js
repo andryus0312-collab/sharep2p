@@ -1,11 +1,10 @@
-const CACHE_NAME = 'sharep2p-cache-v2'; // Subimos a v2 para forzar actualización
+const CACHE_NAME = 'sharep2p-cache-v3';
 
-// Rutas exactas según tu estructura de carpetas
 const urlsToCache = [
   './',
   './index.html',
-  './js/app.js',          // <-- Tu JS en su carpeta
-  './css/styles.css',     // <-- Tu CSS en su carpeta (si la carpeta se llama 'styles', cámbialo aquí)
+  './js/app.js',
+  './css/styles.css',
   './manifest.json',
   './icons/web-app-manifest-192x192.png',
   './icons/web-app-manifest-512x512.png'
@@ -13,42 +12,51 @@ const urlsToCache = [
 
 // 1. INSTALACIÓN
 self.addEventListener('install', (event) => {
-  console.log('⚙️ Service Worker: Instalando...');
+  console.log('⚙️ Service Worker: Instalando (v3)...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(urlsToCache))
       .catch((error) => console.error('❌ Error al cachear:', error))
   );
-  self.skipWaiting(); 
+  self.skipWaiting();
 });
 
-// 2. ACTIVACIÓN
+// 2. ACTIVACIÓN (borra cachés viejas, incluida la v2)
 self.addEventListener('activate', (event) => {
-  console.log('🔄 Service Worker: Activado');
+  console.log('🔄 Service Worker: Activado (v3)');
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) return caches.delete(cacheName);
-        })
-      );
-    })
+    caches.keys().then((names) =>
+      Promise.all(names.map((name) => name !== CACHE_NAME ? caches.delete(name) : null))
+    )
   );
   self.clients.claim();
 });
 
-// 3. INTERCEPTAR (OFFLINE FIRST)
+// 3. ESTRATEGIA: caché instantánea + refresco en segundo plano
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        if (response) return response; // ¡Sirve desde caché si existe!
-        return fetch(event.request).catch(() => {
-          if (event.request.destination === 'document') {
-            return caches.match('./index.html');
-          }
-        });
-      })
-  );
+
+  const url = new URL(event.request.url);
+  const isSameOrigin = url.origin === self.location.origin;
+
+  if (isSameOrigin) {
+    // Tus archivos: servir de caché al instante y actualizar en silencio
+    event.respondWith(
+      caches.open(CACHE_NAME).then((cache) =>
+        cache.match(event.request).then((cachedResponse) => {
+          const networkFetch = fetch(event.request)
+            .then((networkResponse) => {
+              if (networkResponse && networkResponse.ok) {
+                cache.put(event.request, networkResponse.clone());
+              }
+              return networkResponse;
+            })
+            .catch(() => cachedResponse || caches.match('./index.html'));
+          return cachedResponse || networkFetch;
+        })
+      )
+    );
+  }
+  // Lo externo (API del QR, y luego Supabase) no se intercepta:
+  // si no hay internet, simplemente falla con elegancia.
 });
