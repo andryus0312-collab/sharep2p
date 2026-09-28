@@ -4,15 +4,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================
     // 🗄️ CONFIGURACIÓN DE SUPABASE
     // ============================================
+    // ⚠️ URL CORREGIDA (con la 's' en lugar de doble 'c')
     const SUPABASE_URL = 'https://lvfkjdcaspaesmjvsiyv.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_2pnzPAe1qWgEpKzCnT6uA_BcFBojtL';
+    
+    // ⚠️ PEGA TU API KEY AQUÍ ABAJO (entre las comillas)
+    // Usa el botón "Copiar" de tu dashboard de Supabase (Settings -> API)
+    const SUPABASE_KEY = 'PEGA_TU_API_KEY_AQUI'; 
     
     let supabaseClient = null;
-    if (window.supabase) {
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    if (window.supabase && SUPABASE_KEY !== 'PEGA_TU_API_KEY_AQUI') {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         console.log('✅ Supabase conectado');
     } else {
-        console.error('❌ Librería Supabase no cargada');
+        console.error('❌ Librería Supabase no cargada o falta la Key');
     }
 
     // Función para registrar en DB
@@ -86,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
             shareBtn.disabled = false;
             shareBtn.classList.add('active');
             
+            // Detectar PC vs Móvil
             const canShare = navigator.canShare && navigator.canShare({ files: selectedFiles });
             shareBtn.querySelector('.btn-text').textContent = canShare ? `Compartir (${selectedFiles.length})` : `Descargar (${selectedFiles.length})`;
             
@@ -140,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const signatureMessage = `🎉✨ *ARCHIVO COMPARTIDO* 📤✨\n🚀 ShareP2P\n🔗 https://andryus0312-collab.github.io/sharep2p/\n💙 Hecho con 💙 por Sr. Andryus`;
 
             if (canShareFiles) {
+                // MÓVIL
                 showProgress(50, '📤 Abriendo menú nativo...');
                 await navigator.share({
                     files: selectedFiles,
@@ -151,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showProgress(100, '✅ ¡Compartido con éxito!');
 
             } else {
+                // PC (DESCARGA)
                 showProgress(50, '💻 Descargando a tu equipo...');
                 
                 for (const file of selectedFiles) {
@@ -232,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
         debugPanel.classList.add('active');
         logs = [];
         addLog('🔍 Diagnóstico iniciado', 'info');
-        addLog(supabaseClient ? '✅ Supabase: Conectado' : '❌ Supabase: Falta librería', supabaseClient ? 'success' : 'error');
+        addLog(supabaseClient ? '✅ Supabase: Conectado' : '❌ Supabase: Falta librería o Key', supabaseClient ? 'success' : 'error');
         
         const canShareFiles = navigator.canShare && navigator.canShare({ files: [new File([''], 'test.txt')] });
         addLog(canShareFiles ? '✅ Web Share API: OK' : '⚠️ Modo Descarga (PC) activado', canShareFiles ? 'success' : 'info');
