@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // ⚠️ PEGA TU API KEY AQUÍ ABAJO (entre las comillas)
     // Usa el botón "Copiar" de tu dashboard de Supabase (Settings -> API)
-    const SUPABASE_KEY = 'PEGA_TU_API_KEY_AQUI'; 
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2ZmtqZGNhc3BhZXNtanZzaXl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MTQzNzgsImV4cCI6MjEwNjE5MDM3OH0.vnGTTA5eJa9eH8xh-pkBpMsQlkocXNDKVI_MSlFAbFI'; 
     
     let supabaseClient = null;
     if (window.supabase && SUPABASE_KEY !=='sb_publishable_Zpx1PAelqWg4Epk2CWI6uA_ReFFDjtL') {
