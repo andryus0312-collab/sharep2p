@@ -1,26 +1,26 @@
 {
-    "name": "Compartir Archivos P2P",
-    "short_name": "ShareP2P",
-    "description": "Comparte archivos fácilmente por Bluetooth, Wi-Fi o cualquier método nativo de tu dispositivo",
-    "start_url": "./index.html",
-    "display": "standalone",
-    "orientation": "portrait",
-    "background_color": "#ffffff",
-    "theme_color": "#667eea",
-    "categories": ["utilities", "productivity"],
-    "lang": "es",
-    "icons": [
+  "name": "Compartir Archivos P2P",
+  "short_name": "ShareP2P",
+  "description": "Comparte archivos fácilmente por Bluetooth, Wi-Fi o cualquier método nativo de tu dispositivo",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#667eea",
+  "categories": ["utilities", "productivity"],
+  "lang": "es",
+  "icons": [
     {
-        "src": "./icons/web-app-manifest-192x192.png",
-        "sizes": "192x192",
-        "type": "image/png",
-        "purpose": "any maskable"
+      "src": "./icons/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-        "src": "./icons/web-app-manifest-512x512.png",
-        "sizes": "512x512",
-        "type": "image/png",
-        "purpose": "any maskable"
+      "src": "./icons/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-    ]
+  ]
 }
