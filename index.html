@@ -4,69 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShareP2P - Compartir Archivos</title>
-    
-    <!-- 🌐 Favicon para la pestaña del navegador -->
-    <link rel="icon" type="image/png" sizes="96x96" href="icons/favicon-96x96.png">
-    <link rel="icon" type="image/x-icon" href="icons/favicon.ico">
-    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-    
-    <!-- 🔗 CSS desde carpeta css -->
-    <link rel="stylesheet" href="css/styles.css">
-    
-    <!--  Manifest para PWA -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#667eea">
+    <link rel="icon" href="./icons/web-app-manifest-192x192.png" type="image/png">
+    <link rel="apple-touch-icon" href="./icons/web-app-manifest-192x192.png">
 </head>
 <body>
-    <!-- 🌙 Botón de modo oscuro -->
+    <!-- Botón Modo Oscuro -->
     <button id="themeToggle" class="theme-toggle" title="Cambiar tema">🌙</button>
 
     <div class="container">
-        <!-- 🆕 Logo y nombre de la app -->
-        <div class="app-header">
-            <img src="icons/web-app-manifest-512x512.png" alt="ShareP2P Logo" class="app-logo">
+        <header class="app-header">
+            <img src="./icons/web-app-manifest-192x192.png" alt="Logo ShareP2P" class="app-logo">
             <h1 class="app-title">ShareP2P</h1>
             <p class="app-subtitle">Comparte archivos de forma rápida y segura</p>
-        </div>
-        
-        <div class="upload-section">
-            <input type="file" id="fileInput" multiple accept="image/*,video/*,.pdf,.doc,.docx">
-            <label for="fileInput" class="upload-btn">
-                <span class="btn-icon">📂</span>
-                <span class="btn-text">Seleccionar Archivos</span>
-            </label>
-        </div>
+        </header>
 
-        <!-- 🖼️ Vista previa de archivos -->
-        <div id="previewContainer" class="preview-container"></div>
+        <main>
+            <!-- Sección de Subida -->
+            <section class="upload-section">
+                <input type="file" id="fileInput" multiple hidden>
+                <label for="fileInput" class="upload-btn">
+                    <span class="btn-icon">📂</span>
+                    <span class="btn-text">Seleccionar Archivos</span>
+                </label>
+                
+                <div id="previewContainer" class="preview-container"></div>
+                <div id="fileList" class="file-list"></div>
+            </section>
 
-        <div id="fileList" class="file-list"></div>
+            <!-- Barra de Progreso -->
+            <div id="progressBar" class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+                <div id="progressText" class="progress-text">0%</div>
+            </div>
 
-        <!--  Barra de progreso -->
-        <div id="progressBar" class="progress-bar">
-            <div id="progressFill" class="progress-fill"></div>
-            <div id="progressText" class="progress-text">Listo para compartir</div>
-        </div>
+            <!-- Botones de Acción -->
+            <button id="shareBtn" class="share-btn" disabled>
+                <span class="btn-icon">🚀</span>
+                <span class="btn-text">Compartir</span>
+            </button>
 
-        <button id="shareBtn" class="share-btn" disabled>
-            <span class="btn-icon">🚀</span>
-            <span class="btn-text">Compartir</span>
-        </button>
-        
-        <!-- 📱 Botón QR -->
-        <button id="qrBtn" class="qr-btn">
-            <span class="btn-icon">📱</span>
-            <span class="btn-text">Generar QR de Invitación</span>
-        </button>
-        
-        <div id="status" class="status"></div>
-        <!--  Aviso de privacidad -->
-   <p class="privacy-footer">
-       🔒 Tus datos de uso se eliminan automáticamente cada 3 días
-   </p>
+            <button id="qrBtn" class="qr-btn">
+                <span class="btn-icon">📱</span>
+                <span class="btn-text">Generar QR de Invitación</span>
+            </button>
+
+            <div id="status" class="status"></div>
+        </main>
+
+        <footer class="privacy-footer">
+            🔒 Tus datos de uso se eliminan automáticamente cada 3 días
+        </footer>
     </div>
 
-    <!-- 🆕 Modal del código QR -->
+    <!-- Modal QR -->
     <div id="qrModal" class="qr-modal">
         <div class="qr-modal-content">
             <div class="qr-modal-header">
@@ -74,20 +67,26 @@
                 <button id="closeQrModal" class="close-qr-btn">✕</button>
             </div>
             <div class="qr-modal-body">
-                <!-- ⚠️ Tip de advertencia en rojo -->
                 <div class="qr-warning">
-                    <span class="warning-icon">️</span>
+                    <span class="warning-icon">⚠️</span>
                     <p class="warning-text">
-                        <strong>IMPORTANTE:</strong> Este código QR <strong>NO envía archivos</strong>. 
-                        Solo sirve para <strong>compartir el enlace de la aplicación</strong> con otra persona.
+                        <strong>IMPORTANTE:</strong> Este código QR NO envía archivos. 
+                        Solo sirve para compartir el enlace de la aplicación con otra persona.
                     </p>
                 </div>
+                
+                <p class="qr-message">
+                    ¡Hola! Te invito a usar ShareP2P para compartir archivos de forma rápida, segura y sin complicaciones.
+                </p>
 
-                <p class="qr-message">¡Hola! Te invito a usar <strong>ShareP2P</strong> para compartir archivos de forma rápida, segura y sin complicaciones.</p>
                 <div id="qrcode" class="qrcode-container"></div>
-                <p class="qr-instruction">👆 Escanea este código con la cámara de tu celular</p>
+
+                <p class="qr-instruction">
+                    👆 Escanea este código con la cámara de tu celular<br>
+                    O copia este enlace manualmente:
+                </p>
+
                 <div class="qr-link-box">
-                    <p class="qr-link-label">O copia este enlace manualmente:</p>
                     <input type="text" id="qrLinkInput" class="qr-link-input" readonly>
                     <button id="copyLinkBtn" class="copy-link-btn">📋 Copiar enlace</button>
                 </div>
@@ -95,11 +94,12 @@
         </div>
     </div>
 
-    <!-- 🔍 Botón y panel de consola -->
-    <button id="debugBtn" class="debug-btn">🔍</button>
+    <!-- Botón Depuración -->
+    <button id="debugBtn" class="debug-btn" title="Consola de Depuración">🔍</button>
+    
     <div id="debugPanel" class="debug-panel">
         <div class="debug-header">
-            <span> Consola de Depuración</span>
+            <span>🔍 Consola de Depuración</span>
             <button id="closeDebug" class="close-btn">✕</button>
         </div>
         <div class="debug-content">
@@ -111,13 +111,11 @@
         </div>
     </div>
 
-    <!-- 🔗 JavaScript desde carpeta js -->
-    <script src="js/app.js"></script>
-    <!-- Supabase JS Library -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<!-- Tu app.js (ya debería estar aquí) -->
-<script src="./js/app.js"></script>
+    <!-- SCRIPTS -->
+    <!-- 1. Librería Supabase (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <!-- 2. Tu lógica de la app -->
+    <script src="./js/app.js"></script>
 </body>
-                </html>
+</html>
