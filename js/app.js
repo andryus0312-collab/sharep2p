@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================
     // 🗄️ CONFIGURACIÓN DE SUPABASE
     // ============================================
-    const SUPABASE_URL = 'https://lvfkjdccpaesmjvsiyv.supabase.co';
+    const SUPABASE_URL = 'https://lvfkjdcaspaesmjvsiyv.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_2pnzPAe1qWgEpKzCnT6uA_BcFBojtL';
     
     let supabaseClient = null;
