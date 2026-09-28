@@ -1,5 +1,45 @@
 // Esperar a que la página cargue completamente
 document.addEventListener('DOMContentLoaded', () => {
+    // ============================================
+// 🗄️ SUPABASE CONFIGURACIÓN
+// ============================================
+const SUPABASE_URL = 'https://lvfkjdccpaesmjvsiyv.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_2pnzPAe1qWgEpKzCnT6uA_BcFBojtL';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Función para detectar tipo de dispositivo
+function getDeviceType() {
+    const ua = navigator.userAgent;
+    if (/mobile/i.test(ua)) return 'mobile';
+    if (/tablet/i.test(ua)) return 'tablet';
+    return 'desktop';
+}
+
+// Función para registrar transferencia en Supabase
+async function registerTransfer(fileName, fileSize, fileType, shareMethod) {
+    try {
+        const { data, error } = await supabase
+            .from('transferencias')
+            .insert([
+                {
+                    file_name: fileName,
+                    file_size: fileSize,
+                    file_type: fileType,
+                    device_type: getDeviceType(),
+                    share_method: shareMethod,
+                    user_agent: navigator.userAgent
+                }
+            ]);
+        
+        if (error) {
+            console.error('❌ Error al registrar transferencia:', error);
+        } else {
+            console.log('✅ Transferencia registrada en Supabase');
+        }
+    } catch (err) {
+        console.error('❌ Error inesperado al registrar:', err);
+    }
+}
     console.log('✅ DOM Cargado - App iniciada');
 
     // 1️⃣ Identificar los elementos del HTML
@@ -105,55 +145,78 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================================
-    // 🚀 COMPARTIR O DESCARGAR (PC y Móvil)
-    // ============================================
-    shareBtn.addEventListener('click', async () => {
-        if (selectedFiles.length === 0) return;
+// 🚀 COMPARTIR O DESCARGAR ARCHIVOS (Compatible PC y Móvil)
+// ============================================
+shareBtn.addEventListener('click', async () => {
+    if (selectedFiles.length === 0) return;
 
-        const canShareFiles = navigator.canShare && navigator.canShare({ files: selectedFiles });
+    const canShareFiles = navigator.canShare && navigator.canShare({ files: selectedFiles });
 
-        try {
-            showProgress(20, '⏳ Preparando archivos...');
+    try {
+        showProgress(20, '⏳ Preparando archivos...');
 
-            const signatureMessage = selectedFiles.map(file => {
-                return `🎉✨ *ARCHIVO COMPARTIDO* 📤✨\n📄 Nombre: ${file.name}\n📦 Tamaño: ${formatFileSize(file.size)}\n━━━━━━━━━━━━━━━━━━━━━━━\n📱 Compartido a través de:\n🚀 ShareP2P\n🔗 https://andryus0312-collab.github.io/sharep2p/\n━━━━━━━━━━━━━━━━━━━━━━━\n💙 Hecho con 💙 por Sr. Andryus 💙`;
-            }).join('\n\n');
+        const signatureMessage = selectedFiles.map(file => {
+            return `🎉✨ *ARCHIVO COMPARTIDO* 📤✨\n📄 Nombre: ${file.name}\n📦 Tamaño: ${formatFileSize(file.size)}\n━━━━━━━━━━━━━━━━━━━━━━━\n📱 Compartido a través de:\n🚀 ShareP2P - Tu app de compartir archivos\n🔗 Visita la app:\nhttps://andryus0312-collab.github.io/sharep2p/\n━━━━━━━━━━━━━━━━━━━━━━━\n💙 Hecho con 💙 por Sr. Andryus 💙\n¡Gracias por usar ShareP2P! 🌟`;
+        }).join('\n\n━━━━━━━━━━━━━━━━━━━━━━━\n\n');
 
-            if (canShareFiles) {
-                showProgress(50, '📤 Abriendo menú nativo...');
-                await navigator.share({
-                    files: selectedFiles,
-                    title: 'Archivos ShareP2P',
-                    text: signatureMessage
-                });
-                showProgress(100, '✅ ¡Compartido con éxito!');
-            } else {
-                showProgress(50, '💻 Descargando a tu equipo...');
-                for (const file of selectedFiles) {
-                    const url = URL.createObjectURL(file);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = file.name;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                    await new Promise(resolve => setTimeout(resolve, 300));
-                }
-                showProgress(100, '✅ ¡Descarga completada!');
+        if (canShareFiles) {
+            // 📱 MODO MÓVIL: Usar API nativa
+            showProgress(50, '📤 Abriendo menú de compartir...');
+            await navigator.share({
+                files: selectedFiles,
+                title: '📤 Archivos compartidos con ShareP2P',
+                text: signatureMessage
+            });
+            
+            showProgress(100, '✅ ¡Compartido con éxito!');
+            
+            // Registrar cada archivo compartido
+            for (const file of selectedFiles) {
+                await registerTransfer(file.name, file.size, file.type, 'web_share');
             }
 
-            setTimeout(() => { hideProgress(); resetApp(); }, 2500);
-
-        } catch (err) {
-            if (err.name !== 'AbortError') {
-                showProgress(0, '❌ Error: ' + err.message, true);
-                setTimeout(hideProgress, 3000);
-            } else {
-                hideProgress();
+        } else {
+            // 💻 MODO PC: Descargar archivos directamente
+            showProgress(50, '💻 Descargando archivos a tu computadora...');
+            
+            for (const file of selectedFiles) {
+                const url = URL.createObjectURL(file);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = file.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                // Registrar descarga
+                await registerTransfer(file.name, file.size, file.type, 'download');
+                
+                await new Promise(resolve => setTimeout(resolve, 300));
             }
+
+            showProgress(100, '✅ ¡Archivos descargados!');
         }
-    });
+
+        setTimeout(() => {
+            hideProgress();
+            resetApp();
+        }, 2500);
+
+    } catch (err) {
+        if (err.name !== 'AbortError') {
+            showProgress(0, '❌ Error: ' + err.message, true);
+            setTimeout(() => {
+                hideProgress();
+            }, 3000);
+        } else {
+            showProgress(0, '⚠️ Acción cancelada');
+            setTimeout(() => {
+                hideProgress();
+            }, 2000);
+        }
+    }
+});
 
     function showProgress(percent, message, isError = false) {
         progressBar.classList.add('active');
