@@ -39,18 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const isDark = document.body.classList.contains('dark-mode');
         themeToggle.textContent = isDark ? '☀️' : '🌙';
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        console.log('🎨 Tema cambiado a:', isDark ? 'oscuro' : 'claro');
     });
 
     // ============================================
     // 📂 SELECCIÓN DE ARCHIVOS
     // ============================================
     fileInput.addEventListener('change', (e) => {
-        console.log('📂 Archivos detectados:', e.target.files.length);
         selectedFiles = Array.from(e.target.files);
 
         if (selectedFiles.length > 0) {
-            // Mostrar lista de archivos
             fileList.innerHTML = selectedFiles.map(file => `
                 <div class="file-item">
                     <span>📄 ${file.name}</span>
@@ -58,27 +55,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `).join('');
 
-            // Generar vista previa
             generatePreviews(selectedFiles);
 
-            // Activar botón (Compartir en móvil, Descargar en PC)
             shareBtn.disabled = false;
             shareBtn.classList.add('active');
             
+            // Detectar si puede compartir (Móvil) o debe descargar (PC)
             const canShare = navigator.canShare && navigator.canShare({ files: selectedFiles });
             const actionText = canShare ? 'Compartir' : 'Descargar';
             shareBtn.querySelector('.btn-text').textContent = `${actionText} (${selectedFiles.length})`;
             
         } else {
-            fileList.innerHTML = '';
-            previewContainer.innerHTML = '';
-            shareBtn.disabled = true;
-            shareBtn.classList.remove('active');
-            shareBtn.querySelector('.btn-text').textContent = 'Compartir';
+            resetApp();
         }
     });
 
-    // 🆕 Generar vista previa de archivos
     function generatePreviews(files) {
         previewContainer.innerHTML = '';
         files.forEach((file, index) => {
@@ -91,29 +82,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 reader.onload = (e) => {
                     const img = document.createElement('img');
                     img.src = e.target.result;
-                    img.alt = file.name;
                     previewItem.appendChild(img);
                 };
                 reader.readAsDataURL(file);
             } else {
                 const icon = document.createElement('div');
                 icon.className = 'file-icon';
-                if (file.type.startsWith('video/')) {
-                    icon.textContent = '🎬';
-                } else if (file.type.includes('pdf')) {
-                    icon.textContent = '📕';
-                } else if (file.type.includes('word') || file.type.includes('document')) {
-                    icon.textContent = '📝';
-                } else {
-                    icon.textContent = '📄';
-                }
+                if (file.type.startsWith('video/')) icon.textContent = '🎬';
+                else if (file.type.includes('pdf')) icon.textContent = '📕';
+                else if (file.type.includes('word') || file.type.includes('document')) icon.textContent = '📝';
+                else icon.textContent = '📄';
                 previewItem.appendChild(icon);
             }
             previewContainer.appendChild(previewItem);
         });
     }
 
-    // Formatear tamaño de archivo
     function formatFileSize(bytes) {
         if (bytes < 1024) return bytes + ' B';
         if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
@@ -121,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================================
-    // 🚀 COMPARTIR O DESCARGAR ARCHIVOS (Compatible PC y Móvil)
+    // 🚀 COMPARTIR O DESCARGAR (PC y Móvil)
     // ============================================
     shareBtn.addEventListener('click', async () => {
         if (selectedFiles.length === 0) return;
@@ -131,30 +115,20 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             showProgress(20, '⏳ Preparando archivos...');
 
-            // Crear mensaje de firma (Corregido el emoji faltante 💙)
             const signatureMessage = selectedFiles.map(file => {
-                return `🎉✨ *ARCHIVO COMPARTIDO* 📤✨\n📄 Nombre: ${file.name}\n📦 Tamaño: ${formatFileSize(file.size)}\n━━━━━━━━━━━━━━━━━━━━━━━\n📱 Compartido a través de:\n🚀 ShareP2P - Tu app de compartir archivos\n🔗 Visita la app:\nhttps://andryus0312-collab.github.io/sharep2p/\n━━━━━━━━━━━━━━━━━━━━━━━\n💙 Hecho con 💙 por Sr. Andryus 💙\n¡Gracias por usar ShareP2P! 🌟`;
-            }).join('\n\n━━━━━━━━━━━━━━━━━━━━━━━\n\n');
+                return `🎉✨ *ARCHIVO COMPARTIDO* 📤✨\n📄 Nombre: ${file.name}\n📦 Tamaño: ${formatFileSize(file.size)}\n━━━━━━━━━━━━━━━━━━━━━━━\n📱 Compartido a través de:\n🚀 ShareP2P\n🔗 https://andryus0312-collab.github.io/sharep2p/\n━━━━━━━━━━━━━━━━━━━━━━━\n💙 Hecho con 💙 por Sr. Andryus 💙`;
+            }).join('\n\n');
 
             if (canShareFiles) {
-                // 📱 MODO MÓVIL: Usar API nativa
-                showProgress(50, '📤 Abriendo menú de compartir...');
+                showProgress(50, '📤 Abriendo menú nativo...');
                 await navigator.share({
                     files: selectedFiles,
-                    title: '📤 Archivos compartidos con ShareP2P',
+                    title: 'Archivos ShareP2P',
                     text: signatureMessage
                 });
-                
                 showProgress(100, '✅ ¡Compartido con éxito!');
-                setTimeout(() => {
-                    hideProgress();
-                    resetApp();
-                }, 2500);
-
             } else {
-                // 💻 MODO PC: Descargar archivos directamente
-                showProgress(50, '💻 Descargando archivos a tu computadora...');
-                
+                showProgress(50, '💻 Descargando a tu equipo...');
                 for (const file of selectedFiles) {
                     const url = URL.createObjectURL(file);
                     const a = document.createElement('a');
@@ -164,118 +138,61 @@ document.addEventListener('DOMContentLoaded', () => {
                     a.click();
                     document.body.removeChild(a);
                     URL.revokeObjectURL(url);
-                    
-                    // Pequeña pausa entre descargas si hay varios archivos
-                    await new Promise(resolve => setTimeout(resolve, 500));
+                    await new Promise(resolve => setTimeout(resolve, 300));
                 }
-
-                showProgress(100, '✅ ¡Archivos descargados!');
-                setTimeout(() => {
-                    hideProgress();
-                    resetApp();
-                }, 2500);
+                showProgress(100, '✅ ¡Descarga completada!');
             }
+
+            setTimeout(() => { hideProgress(); resetApp(); }, 2500);
 
         } catch (err) {
             if (err.name !== 'AbortError') {
                 showProgress(0, '❌ Error: ' + err.message, true);
-                setTimeout(() => {
-                    hideProgress();
-                }, 3000);
+                setTimeout(hideProgress, 3000);
             } else {
-                showProgress(0, '⚠️ Acción cancelada');
-                setTimeout(() => {
-                    hideProgress();
-                }, 2000);
+                hideProgress();
             }
         }
     });
 
-    // 🆕 Funciones de barra de progreso
     function showProgress(percent, message, isError = false) {
         progressBar.classList.add('active');
         progressFill.style.width = percent + '%';
         progressText.textContent = message;
-        
-        if (percent > 0 && percent < 100) {
-            progressFill.classList.add('animating');
-        } else {
-            progressFill.classList.remove('animating');
-        }
-        
-        if (isError) {
-            progressFill.style.background = '#ef4444';
-        } else {
-            progressFill.style.background = '';
-        }
+        progressFill.style.background = isError ? '#ef4444' : '';
     }
 
     function hideProgress() {
         progressBar.classList.remove('active');
         progressFill.style.width = '0%';
-        progressFill.style.background = '';
-        progressFill.classList.remove('animating');
     }
 
     // ============================================
     // 📱 GENERAR CÓDIGO QR
     // ============================================
     qrBtn.addEventListener('click', () => {
-        console.log('📱 Generando código QR...');
         qrcodeContainer.innerHTML = '';
-        
-        const qrMessage = `¡Hola! Te invito a usar ShareP2P para compartir archivos de forma rápida y segura.\n🔗 https://andryus0312-collab.github.io/sharep2p/\n💙 Hecho con 💙 por Sr. Andryus`;
+        const qrMessage = `¡Hola! Te invito a usar ShareP2P.\n🔗 https://andryus0312-collab.github.io/sharep2p/`;
         qrLinkInput.value = 'https://andryus0312-collab.github.io/sharep2p/';
 
-        try {
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrMessage)}&color=667eea`;
-            const qrImage = document.createElement('img');
-            qrImage.src = qrUrl;
-            qrImage.alt = 'Código QR de invitación';
-            qrImage.style.width = '200px';
-            qrImage.style.height = '200px';
-            qrImage.style.animation = 'zoomIn 0.5s ease-out';
-            
-            qrcodeContainer.appendChild(qrImage);
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrMessage)}&color=667eea`;
+        const qrImage = document.createElement('img');
+        qrImage.src = qrUrl;
+        qrImage.style.width = '200px';
+        qrImage.style.height = '200px';
+        qrcodeContainer.appendChild(qrImage);
 
-            setTimeout(() => {
-                qrModal.classList.add('active');
-                console.log('✅ QR generado exitosamente');
-            }, 100);
-        } catch (error) {
-            console.error('❌ Error al generar QR:', error);
-            alert('Error al generar el código QR: ' + error.message);
-        }
+        setTimeout(() => qrModal.classList.add('active'), 100);
     });
 
-    // Cerrar modal del QR
-    closeQrModal.addEventListener('click', () => {
-        qrModal.classList.remove('active');
-    });
+    closeQrModal.addEventListener('click', () => qrModal.classList.remove('active'));
+    qrModal.addEventListener('click', (e) => { if (e.target === qrModal) qrModal.classList.remove('active'); });
 
-    qrModal.addEventListener('click', (e) => {
-        if (e.target === qrModal) {
-            qrModal.classList.remove('active');
-        }
-    });
-
-    // Copiar enlace del QR
     copyLinkBtn.addEventListener('click', () => {
         qrLinkInput.select();
-        qrLinkInput.setSelectionRange(0, 99999);
-        try {
-            navigator.clipboard.writeText(qrLinkInput.value);
-            copyLinkBtn.textContent = '✅ Copiado';
-            setTimeout(() => {
-                copyLinkBtn.textContent = '📋 Copiar';
-            }, 2000);
-        } catch (error) {
-            document.execCommand('copy');
-            copyLinkBtn.textContent = '✅ Copiado';
-            setTimeout(() => {
-                copyLinkBtn.textContent = '📋 Copiar';
-            }, 2000);
-        }
+        navigator.clipboard.writeText(qrLinkInput.value).catch(() => document.execCommand('copy'));
+        copyLinkBtn.textContent = '✅ Copiado';
+        setTimeout(() => copyLinkBtn.textContent = '📋 Copiar enlace', 2000);
     });
 
     // ============================================
@@ -294,50 +211,36 @@ document.addEventListener('DOMContentLoaded', () => {
         logs = [];
         addLog('🔍 Diagnóstico iniciado', 'info');
         
-        // Comprobación mejorada para PC vs Móvil
         const canShareFiles = navigator.canShare && navigator.canShare({ files: [new File([''], 'test.txt')] });
-        addLog(canShareFiles ? '✅ Web Share API (Archivos): OK' : '⚠️ Web Share API (Archivos): No soportado (Modo Descarga activado)', canShareFiles ? 'success' : 'info');
-        
+        addLog(canShareFiles ? '✅ Web Share API: OK' : '⚠️ Modo Descarga (PC) activado', canShareFiles ? 'success' : 'info');
         addLog(window.location.protocol === 'https:' ? '✅ HTTPS: OK' : '⚠️ HTTPS: Falta', window.location.protocol === 'https:' ? 'success' : 'error');
-        addLog('✅ Librería QR: Usando API externa', 'success');
-        addLog(document.body.classList.contains('dark-mode') ? '🌙 Modo oscuro: ACTIVO' : '☀️ Modo claro: ACTIVO', 'info');
+        addLog('✅ Service Worker: ' + ('serviceWorker' in navigator ? 'Soportado' : 'No soportado'), 'success');
     });
 
     document.getElementById('closeDebug').addEventListener('click', () => debugPanel.classList.remove('active'));
     document.getElementById('clearDebug').addEventListener('click', () => { 
-        logs = []; 
-        document.getElementById('debugOutput').innerHTML = ''; 
+        logs = []; document.getElementById('debugOutput').innerHTML = ''; 
     });
 
-    // ============================================
-    // 🧹 FUNCIÓN PARA REINICIAR LA APP
-    // ============================================
     function resetApp() {
-        console.log('🧹 Reiniciando app...');
         selectedFiles = [];
         previewContainer.innerHTML = '';
         fileList.innerHTML = '';
         fileInput.value = '';
-        
         shareBtn.disabled = true;
         shareBtn.classList.remove('active');
         shareBtn.querySelector('.btn-text').textContent = 'Compartir';
-        console.log('✅ App reiniciada, lista para nueva selección');
     }
-    
+
     // ============================================
     // ⚡ REGISTRAR SERVICE WORKER (MODO OFFLINE)
     // ============================================
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
+            // Apunta a la raíz donde creaste el sw.js
             navigator.serviceWorker.register('./sw.js')
-                .then((registration) => {
-                    console.log('✅ Service Worker registrado con éxito:', registration.scope);
-                })
-                .catch((error) => {
-                    console.error('❌ Error al registrar el Service Worker:', error);
-                });
+                .then(() => console.log('✅ Service Worker registrado'))
+                .catch((err) => console.error('❌ Error SW:', err));
         });
     }
-    
 });
