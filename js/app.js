@@ -64,17 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
             //  Generar vista previa
             generatePreviews(selectedFiles);
             
-            // Activar botón de compartir
-            shareBtn.disabled = false;
-            shareBtn.classList.add('active');
-            shareBtn.querySelector('.btn-text').textContent = `Compartir (${selectedFiles.length})`;
-        } else {
-            fileList.innerHTML = '';
-            previewContainer.innerHTML = '';
-            shareBtn.disabled = true;
-            shareBtn.classList.remove('active');
-            shareBtn.querySelector('.btn-text').textContent = 'Compartir';
-        }
+            // Activar botón (Compartir en móvil, Descargar en PC)
+         shareBtn.disabled = false;
+         shareBtn.classList.add('active');
+         
+         const canShare = navigator.canShare && navigator.canShare({ files: selectedFiles });
+         const actionText = canShare ? 'Compartir' : 'Descargar';
+         shareBtn.querySelector('.btn-text').textContent = `${actionText} (${selectedFiles.length})`;
     });
 
     // 🆕 Generar vista previa de archivos
